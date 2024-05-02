@@ -1,6 +1,5 @@
 {
   "events": [
-
     {
       "id": "1",
       "timestamp": "2013-01-01T00:00:00Z",
@@ -10,10 +9,38 @@
           "id": "1",
           "name": "John Doe"
         },
-      "receiver":
+      "modifiedObject":
         {
           "objectType": "Bill",
-            "objectInstanceID": "18892"
+          "objectInstanceID": "18892"
+        },
+      "changeset":
+        [
+          {
+            "attributeName": "CustomerName",
+            "oldValue": "Tom",
+            "newValue": "Raban"
+          },
+          {
+            "attributeName": "LastChanged",
+            "oldValue": "31.12.2023",
+            "newValue": "01.01.2024"
+          }
+        ]
+    },
+    {
+      "id": "2",
+      "timestamp": "2013-02-01T00:00:00Z",
+      "publisher":
+        {
+          "type": "activity",
+          "id": "1",
+          "name": "John Doe"
+        },
+      "modifiedObject":
+        {
+          "objectType": "Bill",
+          "objectInstanceID": "18892"
         },
       "changeset":
         [
@@ -29,6 +56,6 @@
           }
         ]
 
-          }
-    ]
+    }
+  ]
 }
