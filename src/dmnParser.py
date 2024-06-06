@@ -15,90 +15,6 @@ class GenericObject:
     def __str__(self):
         return str(self.__dict__)
 
-class AttributeExpression():
-    def __init__(self, attribute):
-        self.attribute = attribute
-    
-    def evaluate(self, obj):
-        raise NotImplementedError("Evaluate method must be implemented in derived classes")
-
-    def evaluate(self, object, operator, value):
-        if (operator == ''):
-            return object == value
-        if (operator == "notNull()"):
-            return object is not None
-        if (operator == ">"):
-            return object > value
-        if (operator == "<"):
-            return object < value
-
-class Rule:
-    def __init__(self, source, condition):
-        self.source = source
-        self.condition = condition
-        self.type = 'generic'
-    
-    def evaluate(self, obj):
-        return self.condition(obj)
-
-class RelationRule(Rule):
-    def evaluate(self, obj):
-        return super().evaluate(obj)
-
-class AttributeRule(Rule):
-    def __init__(self, source, condition):
-        super().__init__(source, condition)
-        self.type = 'attribute'
-        
-    def evaluate(self, obj):
-        value = getattr(obj, self.source)
-        return super().evaluate(value)
-
-
-
-
-
-class ExpressionEvaluator:
-    
-    def __init__(self, inputs, outputs, rules):
-        self.inputs = inputs
-        self.outputs = outputs
-        self.rules = rules
-
-    def parse_expression(self):
-        # Naive parser for operations: assumes simple format "attr1.attr2... op value"
-        parts = self.expression.split()
-        if len(parts) == 3:
-            attribute, operation, value = parts
-            value = float(value)  # Convert value to a number (float)
-        else:
-            attribute = self.expression
-            operation = None
-            value = None
-        return attribute, operation, value
-
-    def evaluate(self, obj):
-        attribute, operation, value = self.parse_expression()
-        # Navigate through attributes
-        for attr in attribute.split('.'):
-            obj = getattr(obj, attr, None)
-            if obj is None:
-                raise ValueError(f"Attribute {attr} not found")
-        
-        # Apply operation
-        if operation and value is not None:
-            if operation == '+':
-                return obj + value
-            elif operation == '-':
-                return obj - value
-            elif operation == '*':
-                return obj * value
-            elif operation == '/':
-                return obj / value
-        return obj
-
-
-
 from enum import Enum
 import xml.etree.ElementTree as ET
 
@@ -148,82 +64,108 @@ for decision in root.findall('.//dmn:decision', namespaces):
             rule_map = {'inputs': input_entries, 'outputs': output_entries}
             rules.append(rule_map)
 
-
-# print the extracted data
-# in readalbe format
-# each rule is a dictionary with keys 'condition' and 'outputs'
-
-print('Inputs:', inputs)
-print('Outputs:', outputs)
-print('Rules:')
-for rule in rules:
-    print(rule)
-
-
-def evaluate(object, operator, attribute ):
-    if (operator == ''):
-        return object == attribute
-    if (operator == "notNull()"):
-        return object is not None
-    if (operator == ">"):
-        return object > attribute
-    if (operator == "<"):
-        return object < attribute
+# print('Inputs:', inputs)
+# print('Outputs:', outputs)
+# print('Rules:')
+# for rule in rules:
+#     print(rule)
 
 class FieldType(Enum):
-    STATE = 1
-    ATTRIBUTE = 2
-    RELATION = 3
-    HISTORY = 4
+    state = "state"
+    attribute = "attribute"
+    relation = "relation"
+    history = "history"
 
 
 def determineType(field):
     field = field.lower()
     if field == "state":
-        return FieldType.STATE, field
+        return FieldType.state, field
     elif field.startswith("object."):
-        return FieldType.ATTRIBUTE, field.replace("object.", "")
+        return FieldType.attribute, field.replace("object.", "")
     elif field.startswith("relation."):
-        return FieldType.RELATION, field.replace("relation.", "")
+        return FieldType.relation, field.replace("relation.", "")
     elif field == "history":
-        return FieldType.HISTORY, field
+        return FieldType.history, field
     else:
         raise ValueError("Field not recognized")
     
 def extractOperatorAndValue(condition):
     value = None
     operator = None
+    function = None
     conditionSize = len(condition.split())
-    print(condition)
     if (conditionSize == 1):
-        if (condition.endswith("()")):
-            operator = condition
+        # two possibilities: either a function or a value
+        
+        # check if it is a function
+        if (condition.endswith(")")):
+            function = condition
         else:
+            operator = "=="
             value = condition
     elif (conditionSize == 2):
         operator = condition.split()[0]
         value = condition.split()[1]
     else:
-        raise ValueError("Invalid condition format")
-    return operator, value
+        raise ValueError(f"Invalid condition format. Condition: {condition}")
+    return function, operator, value
 
-def evaluateAttributeExpression(object, operator, value):
-    if (operator is None):
-        return object == value
-    if (operator == "notNull()"):
-        return object is not None
-    if (operator == ">"):
-        return object > value
-    if (operator == "<"):
-        return object < value
+def refineFunction(functionType, function, object):
+    # Split the function name and the argument part
+    type = functionType.value
+    func_name, args = function.split("(")
+    args = args[:-1]  # Remove the closing parenthesis
+    
+    if args:
+        # If there are existing arguments, add value as the first argument
+        new_func_str = f"{type}_{func_name}(\"{object}\", {args})"
+    else:
+        # If there are no existing arguments, just add the value
+        new_func_str = f"{type}_{func_name}(\"{object}\")"
+    return new_func_str
+    
+    
+def getObject(ID):
+    for obj in objects:
+        # compare the id of the object with the given ID
+        if obj.id == ID:
+            return obj        
+    return None
+    
+def attribute_notNull(value):
+    return value is not None
+
+def attribute_exists(value):
+    return value is not None
+
+def relation_inState(value, state):
+    object = getObject(value)
+    if object is None:
+        return False
+    return object.state == state
+
+def relation_exists(value):
+    return value is not None
+
+def history_exists(value, event):
+    return event in value
 
 # Creating an instance
-order = GenericObject(state="None", id="123", totalamount="-150", confirmed="True", history=['Event1'])
+invoiceId = "asda-21231-a21as"
 
-print(eval('True and not(False)'))
+order = GenericObject( id="123", totalamount="150", confirmed="False", history=['Create Invoice', "ArchiveOrder"], invoice=invoiceId)
+invoice = GenericObject (id = invoiceId, state="paid")
 
+objects = [order, invoice]
 
-state = []
+availableStates = []
+for rule in rules:
+    for output in rule['outputs']:
+        availableStates.append(output)
+
+object = order
+currentStates = []
 for j, rule in enumerate(rules):
     ruleFulfilled = True
     for i, condition in enumerate(rule['inputs']):
@@ -231,34 +173,50 @@ for j, rule in enumerate(rules):
         if (condition is None):
             continue
         
-        operator, value = extractOperatorAndValue(condition)
         type, field = determineType(inputs[i])
-
-        print(type, field, operator, value)
-        if (type == FieldType.STATE):
-            print("STATE")
-        elif (type == FieldType.ATTRIBUTE):
-            ruleFulfilled &= evaluateAttributeExpression(getattr(order, field), operator, value)
-        elif (type == FieldType.RELATION):
-            print("RELATION")
-        elif (type == FieldType.HISTORY):
-            print("HISTORY")
-        print(ruleFulfilled)
+        # skip state conditions, evaluation is done at the end
+        if (field == "state"):
+            continue
+        
+        function, operator, value = extractOperatorAndValue(condition)
+        
+        objectValue = getattr(object, field)
+        
+        if (function is not None):
+            function = refineFunction(type, function, objectValue)
+            ruleFulfilled = ruleFulfilled and eval(function)
+        elif (operator is not None and value is not None):
+            ruleFulfilled = ruleFulfilled and eval(objectValue + operator + value)
+        else:
+            raise ValueError(f"Invalid condition format. Condition: {condition}")
+        
+    # set the state
     if (ruleFulfilled):
-        state.append(rules[0]['outputs'][0])
+        currentStates.append(rules[j]['outputs'][0])
+
+
+def replaceStatesWithBoolean(stateCondition, availableStates, currentStates):
+    missingStates = list(set(availableStates) - set(currentStates))
+    for state in missingStates:
+        stateCondition = stateCondition.replace(state, "False")
+    for state in currentStates:
+        stateCondition = stateCondition.replace(state, "True")
+    return stateCondition
+
+trueStates = []
+# evaluate special state conditions
+if ("state" in inputs):
+    for j, rule in enumerate(rules):
+        state = rule['outputs'][0]
+        # only evaluate fullfilled rules
+        if (state in currentStates):
+            stateCondition = rule['inputs'][inputs.index("state")]
+            if (stateCondition is not None):
+                stateCondition = replaceStatesWithBoolean(stateCondition, availableStates, currentStates)
+                if (eval(stateCondition)):
+                    trueStates.append(state)
+            else:
+                trueStates.append(state)
+                
     
-    
-print(state)
-
-# eqExp = EqualityExpression('valid')
-# notNull = NotNullExpression()
-
-
-# rule = AttributeRule('state', notNull.evaluate)
-# print(rule.evaluate(order))
-
-
-# print(order)
-
-# Evaluating rules
-# states = evaluate_dmn_rules(order, rules)
+print(trueStates)
