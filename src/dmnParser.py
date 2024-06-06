@@ -15,47 +15,22 @@ class GenericObject:
     def __str__(self):
         return str(self.__dict__)
 
-
-
-
-
-class EmptyExpression:
-    def evaluate(self, obj):
-        return True
-
-class Expression(EmptyExpression):
+class AttributeExpression():
     def __init__(self, attribute):
         self.attribute = attribute
     
     def evaluate(self, obj):
         raise NotImplementedError("Evaluate method must be implemented in derived classes")
 
-    def evaluate(self, operator, object):
+    def evaluate(self, object, operator, value):
         if (operator == ''):
-            return object == self.attribute
+            return object == value
         if (operator == "notNull()"):
             return object is not None
         if (operator == ">"):
-            return object > self.attribute
+            return object > value
         if (operator == "<"):
-            return object < self.attribute
-
-class EqualityExpression(Expression):
-    def evaluate(self, obj):
-        return obj == self.attribute
-
-class GreaterThanExpression(Expression):
-    def evaluate(self, obj):
-        return obj > self.attribute
-
-class LessThanExpression(Expression):
-    def evaluate(self, obj):
-        return obj < self.attribute
-    
-class NotNullExpression(EmptyExpression):
-    def evaluate(self, obj):
-        print(obj)
-        return obj is not None
+            return object < value
 
 class Rule:
     def __init__(self, source, condition):
@@ -124,6 +99,7 @@ class ExpressionEvaluator:
 
 
 
+from enum import Enum
 import xml.etree.ElementTree as ET
 
 file_path = 'processModel/orderStateDMN.dmn'
@@ -183,15 +159,103 @@ print('Rules:')
 for rule in rules:
     print(rule)
 
+
+def evaluate(object, operator, attribute ):
+    if (operator == ''):
+        return object == attribute
+    if (operator == "notNull()"):
+        return object is not None
+    if (operator == ">"):
+        return object > attribute
+    if (operator == "<"):
+        return object < attribute
+
+class FieldType(Enum):
+    STATE = 1
+    ATTRIBUTE = 2
+    RELATION = 3
+    HISTORY = 4
+
+
+def determineType(field):
+    field = field.lower()
+    if field == "state":
+        return FieldType.STATE, field
+    elif field.startswith("object."):
+        return FieldType.ATTRIBUTE, field.replace("object.", "")
+    elif field.startswith("relation."):
+        return FieldType.RELATION, field.replace("relation.", "")
+    elif field == "history":
+        return FieldType.HISTORY, field
+    else:
+        raise ValueError("Field not recognized")
+    
+def extractOperatorAndValue(condition):
+    value = None
+    operator = None
+    conditionSize = len(condition.split())
+    print(condition)
+    if (conditionSize == 1):
+        if (condition.endswith("()")):
+            operator = condition
+        else:
+            value = condition
+    elif (conditionSize == 2):
+        operator = condition.split()[0]
+        value = condition.split()[1]
+    else:
+        raise ValueError("Invalid condition format")
+    return operator, value
+
+def evaluateAttributeExpression(object, operator, value):
+    if (operator is None):
+        return object == value
+    if (operator == "notNull()"):
+        return object is not None
+    if (operator == ">"):
+        return object > value
+    if (operator == "<"):
+        return object < value
+
 # Creating an instance
-order = GenericObject(state="None", D=123, total_amount=150, confirmed=True, history=['Event1'])
+order = GenericObject(state="None", id="123", totalamount="-150", confirmed="True", history=['Event1'])
 
-print(order)
+print(eval('True and not(False)'))
 
-eqExp = EqualityExpression('valid')
-notNull = NotNullExpression()
-rule = AttributeRule('state', notNull.evaluate)
-print(rule.evaluate(order))
+
+state = []
+for j, rule in enumerate(rules):
+    ruleFulfilled = True
+    for i, condition in enumerate(rule['inputs']):
+        # skip empty conditions
+        if (condition is None):
+            continue
+        
+        operator, value = extractOperatorAndValue(condition)
+        type, field = determineType(inputs[i])
+
+        print(type, field, operator, value)
+        if (type == FieldType.STATE):
+            print("STATE")
+        elif (type == FieldType.ATTRIBUTE):
+            ruleFulfilled &= evaluateAttributeExpression(getattr(order, field), operator, value)
+        elif (type == FieldType.RELATION):
+            print("RELATION")
+        elif (type == FieldType.HISTORY):
+            print("HISTORY")
+        print(ruleFulfilled)
+    if (ruleFulfilled):
+        state.append(rules[0]['outputs'][0])
+    
+    
+print(state)
+
+# eqExp = EqualityExpression('valid')
+# notNull = NotNullExpression()
+
+
+# rule = AttributeRule('state', notNull.evaluate)
+# print(rule.evaluate(order))
 
 
 # print(order)
