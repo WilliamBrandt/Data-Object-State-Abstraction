@@ -14,6 +14,27 @@ class GenericObject:
     
     def __str__(self):
         return str(self.__dict__)
+    
+class DMNTable:
+    def __init__(self, tablename, inputs):
+        self.tablename = tablename
+        self.inputs = inputs
+        # the order of the states corresponds to the order of the rules!
+        self.rules = []
+        self.states = []
+        
+    def add_rule(self, rule):
+        self.rules.append(rule)
+
+    def add_state(self, state):
+        if state not in self.states:
+            self.states.append(state)
+            
+    def __str__(self):
+        str_rules = "\n".join([f"{i}: {rule}" for i, rule in enumerate(self.rules)])
+        
+        return f"DMN-Table: {self.tablename}\nStates: {self.states}\nRules:\n{str_rules}"
+    
 
 from enum import Enum
 import xml.etree.ElementTree as ET
@@ -32,10 +53,9 @@ namespaces = {
     'dmn': 'https://www.omg.org/spec/DMN/20191111/MODEL/'
 }
 
-# Extracting inputs, outputs, and rules
-inputs = []
-outputs = []
-rules = []
+# Parsing code
+dmn_tables = []
+
 
 for decision in root.findall('.//dmn:decision', namespaces):
     for decision_table in decision.findall('.//dmn:decisionTable', namespaces):
@@ -45,30 +65,28 @@ for decision in root.findall('.//dmn:decision', namespaces):
         if table_label:
             table_name = table_label
 
+
+        inputs = []
         # Inputs
         for input_entry in decision_table.findall('.//dmn:input', namespaces):
             input_label = input_entry.get('label')
             if input_label:
                 inputs.append(input_label)
 
-        # Outputs
-        for output_entry in decision_table.findall('.//dmn:output', namespaces):
-            output_label = output_entry.get('label')
-            if output_label:
-                outputs.append(output_label)
+        # Create DMNTable instance
+        dmn_table = DMNTable(table_name, inputs)
 
         # Rules
         for rule in decision_table.findall('.//dmn:rule', namespaces):
             input_entries = [ie.text for ie in rule.findall('.//dmn:inputEntry/dmn:text', namespaces)]
             output_entries = [oe.text for oe in rule.findall('.//dmn:outputEntry/dmn:text', namespaces)]
-            rule_map = {'inputs': input_entries, 'outputs': output_entries}
-            rules.append(rule_map)
+            dmn_table.add_rule(input_entries)
+            if (len(output_entries) == 0 or len(output_entries) > 1):
+                raise ValueError(f"Invalid number of output entries. Expected 1, got {len(output_entries)}")
+            dmn_table.add_state(output_entries[0])
+        dmn_tables.append(dmn_table)
 
-# print('Inputs:', inputs)
-# print('Outputs:', outputs)
-# print('Rules:')
-# for rule in rules:
-#     print(rule)
+print(dmn_tables[0])
 
 class FieldType(Enum):
     state = "state"
@@ -157,23 +175,19 @@ invoiceId = "asda-21231-a21as"
 order = GenericObject( id="123", totalamount="150", confirmed="False", history=['Create Invoice', "ArchiveOrder"], invoice=invoiceId)
 invoice = GenericObject (id = invoiceId, state="paid")
 
+table = dmn_tables[0]
 objects = [order, invoice]
-
-availableStates = []
-for rule in rules:
-    for output in rule['outputs']:
-        availableStates.append(output)
 
 object = order
 currentStates = []
-for j, rule in enumerate(rules):
+for j, rule in enumerate(table.rules):
     ruleFulfilled = True
-    for i, condition in enumerate(rule['inputs']):
+    for i, condition in enumerate(rule):
         # skip empty conditions
         if (condition is None):
             continue
         
-        type, field = determineType(inputs[i])
+        type, field = determineType(table.inputs[i])
         # skip state conditions, evaluation is done at the end
         if (field == "state"):
             continue
@@ -192,7 +206,7 @@ for j, rule in enumerate(rules):
         
     # set the state
     if (ruleFulfilled):
-        currentStates.append(rules[j]['outputs'][0])
+        currentStates.append(table.states[j])
 
 
 def replaceStatesWithBoolean(stateCondition, availableStates, currentStates):
@@ -205,14 +219,14 @@ def replaceStatesWithBoolean(stateCondition, availableStates, currentStates):
 
 trueStates = []
 # evaluate special state conditions
-if ("state" in inputs):
-    for j, rule in enumerate(rules):
-        state = rule['outputs'][0]
+if ("state" in table.inputs):
+    for j, rule in enumerate(table.rules):
+        state = table.states[j]
         # only evaluate fullfilled rules
         if (state in currentStates):
-            stateCondition = rule['inputs'][inputs.index("state")]
+            stateCondition = rule[table.inputs.index("state")]
             if (stateCondition is not None):
-                stateCondition = replaceStatesWithBoolean(stateCondition, availableStates, currentStates)
+                stateCondition = replaceStatesWithBoolean(stateCondition, table.states, currentStates)
                 if (eval(stateCondition)):
                     trueStates.append(state)
             else:
