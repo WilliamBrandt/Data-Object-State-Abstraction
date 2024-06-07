@@ -1,58 +1,44 @@
-from enum import Enum
+from dmnTable import DMNTable   
+from dmnInputType import DMNInputType 
 
-class FieldType(Enum):
-    state = "state"
-    attribute = "attribute"
-    relation = "relation"
-    history = "history"
-                
-                
-class DMNFunctions():
+class DMNObjectFunctions():
+    def notNull(self, value):
+        return value is not None
+
+    def exists(self, value):
+        return value is not None
+    
+class DMNHistoryFunctions():
+    def exists(self, value, event):
+        return event in value    
+
+class DMNRelationFunctions():
     def __init__(self, objects):
         self.objects = objects
     
-    def getObject(self, ID):
+    def _getObject(self, ID):
         for obj in self.objects:
             if obj.id == ID:
                 return obj
         return None
-
-    def attribute_notNull(self, value):
-        return value is not None
-
-    def attribute_exists(self, value):
-        return value is not None
-
-    def relation_inState(self, value, state):
-        object = self.getObject(value)
+    
+    def inState(self, value, state):
+        object = self._getObject(value)
         if object is None:
             return False
         return object.state == state
 
-    def relation_exists(self, value):
+    def exists(self, value):
         return value is not None
 
-    def history_exists(self, value, event):
-        return event in value    
-                
     
 class DMNEvaluator:
-    def __init__(self, dmn_table, objects):
-        self.dmn_table = dmn_table
-        self.functions = DMNFunctions(objects)
-    
-    def _determineType(self, field):
-        field = field.lower()
-        if field == "state":
-            return FieldType.state, field
-        elif field.startswith("object."):
-            return FieldType.attribute, field.replace("object.", "")
-        elif field.startswith("relation."):
-            return FieldType.relation, field.replace("relation.", "")
-        elif field == "history":
-            return FieldType.history, field
-        else:
-            raise ValueError(f"Field not recognized. Field: {field}")
+    def __init__(self, dmn_table : DMNTable, objects):
+        self.dmnTable = dmn_table
+        self.functions_history = DMNHistoryFunctions()
+        self.functions_relation = DMNRelationFunctions(objects)
+        self.functions_object = DMNObjectFunctions()
+        
     
     def _extractOperatorAndValue(self, condition):
         value = None
@@ -83,10 +69,10 @@ class DMNEvaluator:
         
         if args:
             # If there are existing arguments, add value as the first argument
-            new_func_str = f"self.functions.{type}_{func_name}(\"{object}\", {args})"
+            new_func_str = f"self.functions_{type}.{func_name}(\"{object}\", {args})"
         else:
             # If there are no existing arguments, just add the value
-            new_func_str = f"self.functions.{type}_{func_name}(\"{object}\")"
+            new_func_str = f"self.functions_{type}.{func_name}(\"{object}\")"
         return new_func_str
 
     def _replaceStatesWithBoolean(self, stateCondition, availableStates, currentStates):
@@ -99,37 +85,38 @@ class DMNEvaluator:
 
     def evaluate(self, object):
         currentStates = []
-        for j, rule in enumerate(self.dmn_table.rules):
+        for j, rule in enumerate(self.dmnTable.rules):
             ruleFulfilled = True
             for i, condition in enumerate(rule):
                 if condition is None:
                     continue
-                type, field = self._determineType(self.dmn_table.inputs[i])
-                if field == "state":
+                input = self.dmnTable.inputs[i]
+                if input.type == DMNInputType.state:
                     continue
                 function, operator, value = self._extractOperatorAndValue(condition)
-                objectValue = getattr(object, field)
+                objectValue = getattr(object, input.label)
                 if function is not None:
-                    function = self._refineFunction(type, function, objectValue)
-                    print(function)
+                    function = self._refineFunction(input.type, function, objectValue)
                     ruleFulfilled = ruleFulfilled and eval(function)
                 elif operator is not None and value is not None:
                     ruleFulfilled = ruleFulfilled and eval(objectValue + operator + value)
                 else:
                     raise ValueError(f"Invalid condition format. Condition: {condition}")
             if ruleFulfilled:
-                currentStates.append(self.dmn_table.states[j])
-
+                currentStates.append(self.dmnTable.states[j])
+                
         trueStates = []
-        if "state" in self.dmn_table.inputs:
-            for j, rule in enumerate(self.dmn_table.rules):
-                state = self.dmn_table.states[j]
+        if self.dmnTable.hasStateInput():
+            for j, rule in enumerate(self.dmnTable.rules):
+                state = self.dmnTable.states[j]
                 if state in currentStates:
-                    stateCondition = rule[self.dmn_table.inputs.index("state")]
+                    stateCondition = rule[self.dmnTable.getIntexOfStateInput()]
                     if stateCondition is not None:
-                        stateCondition = self._replaceStatesWithBoolean(stateCondition, self.dmn_table.states, currentStates)
+                        stateCondition = self._replaceStatesWithBoolean(stateCondition, self.dmnTable.states, currentStates)
                         if eval(stateCondition):
                             trueStates.append(state)
                     else:
                         trueStates.append(state)
+        else:
+            trueStates = currentStates
         return trueStates

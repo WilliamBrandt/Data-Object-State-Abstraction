@@ -1,4 +1,5 @@
-from dmnTable import DMNTable
+from dmnTable import DMNTable, DMNInput
+from dmnInputType import DMNInputType
 import xml.etree.ElementTree as ET
 
 class DMNParser:
@@ -13,6 +14,20 @@ class DMNParser:
         self.rule_string = './/dmn:rule'
         self.input_entry_string = './/dmn:inputEntry/dmn:text'
         self.output_entry_string = './/dmn:outputEntry/dmn:text'
+        
+    def _examineInputType(self, input):
+        input = input.lower()
+        if input == DMNInputType.state.value:
+            return DMNInputType.state, input
+        elif input.startswith(DMNInputType.object.value+"."):
+            return DMNInputType.object, input.replace(DMNInputType.object.value+".", "")
+        elif input.startswith(DMNInputType.relation.value):
+            return DMNInputType.relation, input.replace(DMNInputType.relation.value+".", "")
+        elif input == DMNInputType.history.value:
+            return DMNInputType.history, input
+        else:
+            raise ValueError(f"Field not recognized. Field: {input}")
+    
 
     def parse(self):
         with open(self.file_path, 'r') as file:
@@ -37,8 +52,10 @@ class DMNParser:
                 # Inputs
                 for input_entry in decision_table.findall(self.input_string, self.namespaces):
                     input_label = input_entry.get('label')
+                    type, label = self._examineInputType(input_label)
+                    input = DMNInput(label, type)
                     if input_label:
-                        inputs.append(input_label)
+                        inputs.append(input)
 
                 # Create DMNTable instance
                 dmn_table = DMNTable(table_name, inputs)
