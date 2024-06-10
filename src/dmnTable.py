@@ -26,9 +26,15 @@ class DMNTable:
         
         self._checkIntegrityOfInputs()
         
-        
-    def add_rule(self, rule):
-        self.rules.append(rule)
+    """
+    Adds a rule to the DMNTable.
+    The order of the arguments must be the same as the order of the inputs.  
+    """
+    def add_rule(self, conditions : List[str]):
+        if len(conditions) != len(self.inputs):
+            raise ValueError(f"Expected {len(self.inputs)} arguments, but got {len(conditions)}")
+
+        self.rules.append(conditions)
 
     def add_state(self, state):
         if state not in self.states:
