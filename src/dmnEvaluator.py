@@ -1,11 +1,11 @@
 from dmnTable import DMNTable   
 from dmnInputType import DMNInputType 
 
-class DMNObjectFunctions():
-    def notNull(self, value):
-        return value is not None
 
-    def exists(self, value):
+class DMNObjectFunctions():
+    # depracted! not necessary
+    # question is this class necessary at all?
+    def notNull(self, value):
         return value is not None
     
 class DMNHistoryFunctions():
@@ -33,7 +33,8 @@ class DMNRelationFunctions():
 
     
 class DMNEvaluator:
-    def __init__(self, dmn_table : DMNTable, objects):
+    def __init__(self, dmn_table : DMNTable, objects = [], debugging = False):
+        self.debugging = debugging
         self.dmnTable = dmn_table
         self.functions_history = DMNHistoryFunctions()
         self.functions_relation = DMNRelationFunctions(objects)
@@ -69,11 +70,23 @@ class DMNEvaluator:
         
         if args:
             # If there are existing arguments, add value as the first argument
-            new_func_str = f"self.functions_{type}.{func_name}(\"{object}\", {args})"
+            new_func_str = f"self.functions_{type}.{func_name}({object}, {args})"
         else:
             # If there are no existing arguments, just add the value
-            new_func_str = f"self.functions_{type}.{func_name}(\"{object}\")"
+            new_func_str = f"self.functions_{type}.{func_name}({object})"
         return new_func_str
+    
+    def _refineValue(self, value):
+        if value is None:
+            return "None"
+        elif isinstance (value, list):
+            return value
+        elif value == "True" or value == "False":
+            return value
+        elif isinstance (value, (int, float)):
+            return value
+        else:
+            return f'"{value}"' 
 
     def _replaceStatesWithBoolean(self, stateCondition, availableStates, currentStates):
         missingStates = list(set(availableStates) - set(currentStates))
@@ -88,20 +101,27 @@ class DMNEvaluator:
         for j, rule in enumerate(self.dmnTable.rules):
             ruleFulfilled = True
             for i, condition in enumerate(rule):
-                if condition is None:
+                if (condition is None) or (condition == ""):
                     continue
                 input = self.dmnTable.inputs[i]
                 if input.type == DMNInputType.state:
                     continue
                 function, operator, value = self._extractOperatorAndValue(condition)
                 objectValue = getattr(object, input.label)
+                objectValue = self._refineValue(objectValue)
                 if function is not None:
                     function = self._refineFunction(input.type, function, objectValue)
+                    if (self.debugging):
+                        print(function)
                     ruleFulfilled = ruleFulfilled and eval(function)
                 elif operator is not None and value is not None:
-                    ruleFulfilled = ruleFulfilled and eval(objectValue + operator + value)
+                    if (self.debugging):
+                        print(f"ObjectValue: {objectValue} Operator: {operator} Value: {value}")
+                    ruleFulfilled = ruleFulfilled and eval(str(objectValue) + str(operator) + str(value))
                 else:
                     raise ValueError(f"Invalid condition format. Condition: {condition}")
+            if (self.debugging):
+                print(f"Rule {j} fulfilled: {ruleFulfilled}")
             if ruleFulfilled:
                 currentStates.append(self.dmnTable.states[j])
                 

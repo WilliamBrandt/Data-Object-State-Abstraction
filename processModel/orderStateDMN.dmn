@@ -41,7 +41,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_0rugnf8">
-          <text>notNull()</text>
+          <text>!= None</text>
         </inputEntry>
         <inputEntry id="UnaryTests_16mfrs5">
           <text>&gt; 0</text>
