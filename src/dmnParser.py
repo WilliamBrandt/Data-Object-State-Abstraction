@@ -3,8 +3,7 @@ from dmnInputType import DMNInputType
 import xml.etree.ElementTree as ET
 
 class DMNParser:
-    def __init__(self, file_path):
-        self.file_path = file_path
+    def __init__(self):
         self.namespaces = {
             'dmn': 'https://www.omg.org/spec/DMN/20191111/MODEL/'
         }
@@ -29,8 +28,8 @@ class DMNParser:
             raise ValueError(f"Field not recognized. Field: {input}")
     
 
-    def parse(self):
-        with open(self.file_path, 'r') as file:
+    def parse(self, file_path):
+        with open(file_path, 'r') as file:
             content = file.read()
 
         # Parse the XML content
@@ -46,7 +45,7 @@ class DMNParser:
                 # Table Name
                 table_label = decision.get('name')
                 if table_label:
-                    table_name = table_label
+                    table_name = table_label.lower()
 
                 inputs = []
                 # Inputs

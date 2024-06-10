@@ -13,7 +13,8 @@ class DMNHistoryFunctions():
         return event in value    
 
 class DMNRelationFunctions():
-    def __init__(self, objects):
+    def __init__(self, evaluator, objects):
+        self.evaluator = evaluator
         self.objects = objects
     
     def _getObject(self, ID):
@@ -26,18 +27,45 @@ class DMNRelationFunctions():
         object = self._getObject(value)
         if object is None:
             return False
-        return object.state == state
+        
+        states = self.evaluator.evaluate(object)
+        return state in states
 
     def exists(self, value):
         return value is not None
 
     
 class DMNEvaluator:
-    def __init__(self, dmn_table : DMNTable, objects = [], debugging = False):
+    """
+    DMNEvaluator is a class that evaluates an object against the rules and states defined in a DMNTable.
+
+    The DMNEvaluator processes the object according to the rules specified in the DMNTable and returns a list of valid states for the object. It evaluates objects based on their attributes and history, utilizing the DMNTable for the evaluation process.
+    
+    Args:
+    dmn_tables (list of DMNTable): List of DMNTables that have a DMNTable for each class
+    objects (list, optional): Defaults to []. List of objects that are used in the evaluation
+    debugging (bool, optional): Defaults to False. If set to true, the evaluator prints debug information
+
+    Returns:
+    list: List of states that are fulfilled
+    
+    Raises:
+    ValueError: If the condition format is invalid
+    """
+    
+    
+    def __init__(self, dmn_tables : list[DMNTable], objects = [], debugging = False):
+        """
+        Args:
+            dmn_tables (list of DMNTable): List of DMNTables that have a DMNTable for each class
+            objects (list, optional): Defaults to []. List of objects that are used in the evaluation
+            debugging (bool, optional): Defaults to False. If set to true, the evaluator prints debug information
+        """
+        
         self.debugging = debugging
-        self.dmnTable = dmn_table
+        self.dmnTables = dmn_tables
         self.functions_history = DMNHistoryFunctions()
-        self.functions_relation = DMNRelationFunctions(objects)
+        self.functions_relation = DMNRelationFunctions(self, objects)
         self.functions_object = DMNObjectFunctions()
         
     
@@ -95,15 +123,28 @@ class DMNEvaluator:
         for state in currentStates:
             stateCondition = stateCondition.replace(state, "True")
         return stateCondition
+    
+    
+    def getDMNTable(self, object):
+        for dmnTable in self.dmnTables:
+            if dmnTable.tablename == object.clazz:
+                return dmnTable
+        return None
 
     def evaluate(self, object):
-        currentStates = []
-        for j, rule in enumerate(self.dmnTable.rules):
+        
+        dmnTable = self.getDMNTable(object)
+        if (dmnTable is None):
+            raise ValueError(f"No DMNTable found for class: {object.clazz}\nPossible classes: {[table.tablename for table in self.dmnTables]}")
+        
+        
+        possibleStates = []
+        for j, rule in enumerate(dmnTable.rules):
             ruleFulfilled = True
             for i, condition in enumerate(rule):
                 if (condition is None) or (condition == ""):
                     continue
-                input = self.dmnTable.inputs[i]
+                input =  dmnTable.inputs[i]
                 if input.type == DMNInputType.state:
                     continue
                 function, operator, value = self._extractOperatorAndValue(condition)
@@ -112,31 +153,33 @@ class DMNEvaluator:
                 if function is not None:
                     function = self._refineFunction(input.type, function, objectValue)
                     if (self.debugging):
-                        print(function)
+                        print(f"Executing function: {function}")
                     ruleFulfilled = ruleFulfilled and eval(function)
                 elif operator is not None and value is not None:
                     if (self.debugging):
-                        print(f"ObjectValue: {objectValue} Operator: {operator} Value: {value}")
+                        print(f"Evaluating term: {objectValue} {operator} {value}")
                     ruleFulfilled = ruleFulfilled and eval(str(objectValue) + str(operator) + str(value))
                 else:
                     raise ValueError(f"Invalid condition format. Condition: {condition}")
             if (self.debugging):
-                print(f"Rule {j} fulfilled: {ruleFulfilled}")
+                print(f"Rule {j} evaluated to: {ruleFulfilled}")
             if ruleFulfilled:
-                currentStates.append(self.dmnTable.states[j])
+                possibleStates.append(dmnTable.states[j])
                 
-        trueStates = []
-        if self.dmnTable.hasStateInput():
-            for j, rule in enumerate(self.dmnTable.rules):
-                state = self.dmnTable.states[j]
-                if state in currentStates:
-                    stateCondition = rule[self.dmnTable.getIntexOfStateInput()]
+        validStates = []
+        if dmnTable.hasStateInput():
+            for j, rule in enumerate(dmnTable.rules):
+                state = dmnTable.states[j]
+                if state in possibleStates:
+                    stateCondition = rule[dmnTable.getIntexOfStateInput()]
                     if stateCondition is not None:
-                        stateCondition = self._replaceStatesWithBoolean(stateCondition, self.dmnTable.states, currentStates)
+                        stateCondition = self._replaceStatesWithBoolean(stateCondition, dmnTable.states, possibleStates)
                         if eval(stateCondition):
-                            trueStates.append(state)
+                            validStates.append(state)
                     else:
-                        trueStates.append(state)
+                        validStates.append(state)
         else:
-            trueStates = currentStates
-        return trueStates
+            validStates = possibleStates
+        if (self.debugging):
+            print(f"Object: {object.id} from class: {object.clazz} has states:{validStates}")
+        return validStates
