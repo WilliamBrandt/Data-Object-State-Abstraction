@@ -2,32 +2,32 @@
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="definitions_0t5zyj9" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="16.4.0">
   <decision id="decision_1melyy5" name="class.Order">
     <decisionTable id="decisionTable_1cy8n2o" hitPolicy="ANY">
-      <input id="InputClause_1qqwx65" label="state">
+      <input id="InputClause_1qqwx65" label="state" biodi:width="165">
         <inputExpression id="LiteralExpression_1ioox59" typeRef="string">
           <text></text>
         </inputExpression>
       </input>
-      <input id="input1" label="object.ID">
+      <input id="input1" label="object.ID" biodi:width="150">
         <inputExpression id="inputExpression1" typeRef="string">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1jntpni" label="object.TotalAmount">
+      <input id="InputClause_1jntpni" label="object.TotalAmount" biodi:width="168">
         <inputExpression id="LiteralExpression_1cwql3x" typeRef="number">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1tx1iig" label="object.Confirmed" biodi:width="192">
+      <input id="InputClause_1tx1iig" label="object.Confirmed" biodi:width="150">
         <inputExpression id="LiteralExpression_0jnam4w" typeRef="boolean">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1ncwc83" label="relation.Invoice" biodi:width="192">
+      <input id="InputClause_1ncwc83" label="relation.Invoice" biodi:width="150">
         <inputExpression id="LiteralExpression_1y6n65j" typeRef="Any">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_08clrt5" label="history">
+      <input id="InputClause_08clrt5" label="history" biodi:width="187">
         <inputExpression id="LiteralExpression_1eyhof4" typeRef="string">
           <text></text>
         </inputExpression>
@@ -35,7 +35,8 @@
           <text>"Send Invoice","Archive Order","Receive payment"</text>
         </inputValues>
       </input>
-      <output id="output1" label="State" name="" typeRef="string" />
+      <output id="output1" label="State" name="" typeRef="string" biodi:width="150" />
+      <output id="OutputClause_1prw7fj" label="Level" typeRef="string" />
       <rule id="DecisionRule_0knf790">
         <inputEntry id="UnaryTests_1gf5cm8">
           <text></text>
@@ -57,6 +58,9 @@
         </inputEntry>
         <outputEntry id="LiteralExpression_0emh7qs">
           <text>valid</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_184fr42">
+          <text>0</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_0i4p6n6">
@@ -81,6 +85,9 @@
         <outputEntry id="LiteralExpression_1pqhyd7">
           <text>confirmed</text>
         </outputEntry>
+        <outputEntry id="LiteralExpression_1c12kbh">
+          <text>0</text>
+        </outputEntry>
       </rule>
       <rule id="DecisionRule_1swhio8">
         <inputEntry id="UnaryTests_0n9cra5">
@@ -103,6 +110,9 @@
         </inputEntry>
         <outputEntry id="LiteralExpression_0vy9yw2">
           <text>invoiced</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_1d1ml73">
+          <text>0</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_177xy4r">
@@ -127,6 +137,9 @@
         <outputEntry id="LiteralExpression_1xnfclk">
           <text>paid</text>
         </outputEntry>
+        <outputEntry id="LiteralExpression_1pc63jb">
+          <text>0</text>
+        </outputEntry>
       </rule>
       <rule id="DecisionRule_16utv8n">
         <inputEntry id="UnaryTests_1t8wnrh">
@@ -150,6 +163,9 @@
         <outputEntry id="LiteralExpression_1kprz4i">
           <text>archived</text>
         </outputEntry>
+        <outputEntry id="LiteralExpression_199l39e">
+          <text>0</text>
+        </outputEntry>
       </rule>
       <rule id="DecisionRule_1fnlu5b">
         <inputEntry id="UnaryTests_0bfysac">
@@ -172,6 +188,35 @@
         </inputEntry>
         <outputEntry id="LiteralExpression_00pqla8">
           <text>finished</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_1nu7u6q">
+          <text>0</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1obgl10">
+        <inputEntry id="UnaryTests_0u61b61">
+          <text>not(valid)</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1rwbby9">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1wgq82u">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_083kr89">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ql03dg">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ksf93q">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0xnfnta">
+          <text>corrupt</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_1w2heom">
+          <text>2</text>
         </outputEntry>
       </rule>
     </decisionTable>

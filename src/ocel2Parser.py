@@ -2,14 +2,13 @@ import json
 from jsonschema import validate, ValidationError
 import requests
 
-from src.genericObject import GenericObject
+from genericObject import GenericObject
 
 OCEL_SCHEMA_URL = 'https://www.ocel-standard.org/2.0/ocel20-schema-json.json'
-OCEL_PATH = '../processModel/ocelExample.json'
 
 
 class OCELParser:
-    def __init__(self, file_path: str = OCEL_PATH):
+    def __init__(self, file_path):
         self.file_path = file_path
         self.json_data = None
 
@@ -81,7 +80,7 @@ class OCEL:
     def get_object_objects(self):
         return self.object_objects
 
-    def parse_and_store(self, file_path=OCEL_PATH):
+    def parse_and_store(self, file_path):
         parser = OCELParser(file_path)
         json_data = parser.parse()
 

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="definitions_0t5zyj9" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="16.4.0">
+  <decision id="decision_1melyy5" name="class.Order">
+    <decisionTable id="decisionTable_1cy8n2o" hitPolicy="ANY">
+      <input id="InputClause_1qqwx65" label="state">
+        <inputExpression id="LiteralExpression_1ioox59" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="input1" label="object.ID">
+        <inputExpression id="inputExpression1" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1jntpni" label="object.TotalAmount">
+        <inputExpression id="LiteralExpression_1cwql3x" typeRef="number">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1tx1iig" label="object.Confirmed" biodi:width="192">
+        <inputExpression id="LiteralExpression_0jnam4w" typeRef="boolean">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1ncwc83" label="relation.Invoice" biodi:width="192">
+        <inputExpression id="LiteralExpression_1y6n65j" typeRef="Any">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_08clrt5" label="history">
+        <inputExpression id="LiteralExpression_1eyhof4" typeRef="string">
+          <text></text>
+        </inputExpression>
+        <inputValues id="UnaryTests_02zjyjl">
+          <text>"Send Invoice","Archive Order","Receive payment"</text>
+        </inputValues>
+      </input>
+      <output id="output1" label="State" name="" typeRef="string" />
+      <rule id="DecisionRule_0knf790">
+        <inputEntry id="UnaryTests_1gf5cm8">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0rugnf8">
+          <text>!= None</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_16mfrs5">
+          <text>&gt; 0</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1vyh9oh">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1a0w6cu">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_10ebj70">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0emh7qs">
+          <text>valid</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0i4p6n6">
+        <inputEntry id="UnaryTests_1igd89u">
+          <text>valid</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1p85i58">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0jmd0k8">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0yp5hwb">
+          <text>True</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1d3kp55">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0zqn4bz">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1pqhyd7">
+          <text>confirmed</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1swhio8">
+        <inputEntry id="UnaryTests_0n9cra5">
+          <text>valid and not(paid)</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0we5rg2">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_01cfkaf">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ihfmzp">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1h02qo1">
+          <text>exists()</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0oxgde1">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0vy9yw2">
+          <text>invoiced</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_177xy4r">
+        <inputEntry id="UnaryTests_0973s8j">
+          <text>valid</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_18lphg9">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_19drc7g">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1icd148">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0v606at">
+          <text>inState("paid")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_12t2ebc">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1xnfclk">
+          <text>paid</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_16utv8n">
+        <inputEntry id="UnaryTests_1t8wnrh">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_047f0r0">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0jh45p2">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1acahy1">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1001wq3">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_04mjd5f">
+          <text>exists("ArchiveOrder") and exists("PrintedOut")</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1kprz4i">
+          <text>archived</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1fnlu5b">
+        <inputEntry id="UnaryTests_0bfysac">
+          <text>paid and archived</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02n47xa">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0lwmkkf">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1bdyqg7">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0mmwa0k">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_19y3b5m">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_00pqla8">
+          <text>finished</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_1gl8ugj">
+      <dmndi:DMNShape id="DMNShape_1ppeffh" dmnElementRef="decision_1melyy5">
+        <dc:Bounds height="80" width="180" x="150" y="150" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
