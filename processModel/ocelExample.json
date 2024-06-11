@@ -19,20 +19,16 @@
           "type": "integer"
         },
         {
-          "name": "Customer_Id",
-          "type": "integer"
-        },
-        {
-          "name": "Invoice_Id",
-          "type": "integer"
-        },
-        {
           "name": "TotalAmount",
           "type": "integer"
         },
         {
           "name": "Content",
           "type": "string"
+        },
+        {
+          "name": "Confirmed",
+          "type": "boolean"
         },
         {
           "name": "ReceivedAt",
@@ -48,20 +44,16 @@
           "type": "integer"
         },
         {
-          "name": "Customer_Id",
-          "type": "integer"
-        },
-        {
-          "name": "Order_Id",
-          "type": "integer"
-        },
-        {
           "name": "Content",
           "type": "string"
         },
         {
           "name": "Last_Dispatch",
           "type": "time"
+        },
+        {
+          "name": "ReceiveDate",
+          "type": "date"
         }
       ]
     }
