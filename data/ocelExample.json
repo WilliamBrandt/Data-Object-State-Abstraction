@@ -83,29 +83,29 @@
       "type": "order",
       "attributes": [
         {
-          "name": "Id",
+          "name": "id",
           "time": "2020-01-03",
           "value": "1234"
         },
         {
-          "name": "Customer_Id",
+          "name": "customer_Id",
           "time": "2020-01-03",
           "value": "5678"
         },
         {
-          "name": "TotalAmount",
+          "name": "confirmed",
+          "time": "2020-01-03",
+          "value": "True"
+        },
+        {
+          "name": "totalAmount",
           "time": "2020-01-03",
           "value": "1"
         },
         {
-          "name": "Content",
+          "name": "content",
           "time": "2020-01-03",
           "value": "Servus, I am the Order 1234"
-        },
-        {
-          "name": "ReceivedAt",
-          "time": "2020-01-03",
-          "value": "2020-01-03"
         }
       ]
     },
@@ -127,6 +127,11 @@
           "name": "Last_Dispatch",
           "time": "2020-01-03",
           "value": "1970-01-01"
+        },
+        {
+          "name": "receivedAt",
+          "time": "2020-01-03",
+          "value": "2020-01-03"
         }
       ],
       "relationships": [

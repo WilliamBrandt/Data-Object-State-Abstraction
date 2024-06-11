@@ -12,7 +12,7 @@
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1s4gcl5" label="object.receiveDate">
+      <input id="InputClause_1s4gcl5" label="object.receivedAt">
         <inputExpression id="LiteralExpression_01q38mr" typeRef="string">
           <text></text>
         </inputExpression>

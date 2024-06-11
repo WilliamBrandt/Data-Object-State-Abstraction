@@ -15,7 +15,6 @@ class DMNParser:
         self.output_entry_string = './/dmn:outputEntry/dmn:text'
         
     def _examineInputType(self, input):
-        input = input.lower()
         if input == DMNInputType.state.value:
             return DMNInputType.state, input
         elif input.startswith(DMNInputType.object.value+"."):

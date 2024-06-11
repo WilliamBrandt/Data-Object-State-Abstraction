@@ -77,10 +77,12 @@ class DMNEvaluator:
             return value
         elif value == "True" or value == "False":
             return value
-        elif isinstance (value, (int, float)):
-            return value
         else:
-            return f'"{value}"' 
+            try:
+                number = int(value)
+                return number
+            except:
+                return f'"{value}"'                
     
     def _getObjectValue(self, object, attribute : DMNInput):
         objectValue = getattr(object, attribute.label)

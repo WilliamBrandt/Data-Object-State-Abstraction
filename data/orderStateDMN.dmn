@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="definitions_0t5zyj9" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="16.4.0">
-  <decision id="decision_1melyy5" name="class.Order">
+  <decision id="decision_1melyy5" name="class.order">
     <decisionTable id="decisionTable_1cy8n2o" hitPolicy="ANY">
       <input id="InputClause_1qqwx65" label="state">
         <inputExpression id="LiteralExpression_1ioox59" typeRef="string">
           <text></text>
         </inputExpression>
       </input>
-      <input id="input1" label="object.ID">
+      <input id="input1" label="object.id">
         <inputExpression id="inputExpression1" typeRef="string">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1jntpni" label="object.TotalAmount">
+      <input id="InputClause_1jntpni" label="object.totalAmount">
         <inputExpression id="LiteralExpression_1cwql3x" typeRef="number">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1tx1iig" label="object.Confirmed" biodi:width="192">
+      <input id="InputClause_1tx1iig" label="object.confirmed" biodi:width="192">
         <inputExpression id="LiteralExpression_0jnam4w" typeRef="boolean">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1ncwc83" label="relation.Invoice" biodi:width="192">
+      <input id="InputClause_1ncwc83" label="relation.invoice" biodi:width="192">
         <inputExpression id="LiteralExpression_1y6n65j" typeRef="Any">
           <text></text>
         </inputExpression>
@@ -35,7 +35,7 @@
           <text>"Send Invoice","Archive Order","Receive payment"</text>
         </inputValues>
       </input>
-      <output id="output1" label="State" name="" typeRef="string" />
+      <output id="output1" label="state" name="" typeRef="string" />
       <rule id="DecisionRule_0knf790">
         <inputEntry id="UnaryTests_1gf5cm8">
           <text></text>
@@ -145,7 +145,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_04mjd5f">
-          <text>exists("ArchiveOrder") and exists("PrintedOut")</text>
+          <text>exists("ArchiveOrder")</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1kprz4i">
           <text>archived</text>
