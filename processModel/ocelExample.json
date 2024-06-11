@@ -1,0 +1,148 @@
+{
+  "eventTypes": [
+    {
+      "name": "ArchiveOrder",
+      "attributes": [
+        {
+            "name": "total-orders",
+            "type": "integer"
+        }
+      ]
+    }
+  ],
+  "objectTypes": [
+    {
+      "name": "order",
+      "attributes": [
+        {
+          "name": "Id",
+          "type": "integer"
+        },
+        {
+          "name": "Customer_Id",
+          "type": "integer"
+        },
+        {
+          "name": "Invoice_Id",
+          "type": "integer"
+        },
+        {
+          "name": "TotalAmount",
+          "type": "integer"
+        },
+        {
+          "name": "Content",
+          "type": "string"
+        },
+        {
+          "name": "ReceivedAt",
+          "type": "time"
+        }
+      ]
+    },
+    {
+      "name": "invoice",
+      "attributes": [
+        {
+          "name": "Id",
+          "type": "integer"
+        },
+        {
+          "name": "Customer_Id",
+          "type": "integer"
+        },
+        {
+          "name": "Order_Id",
+          "type": "integer"
+        },
+        {
+          "name": "Content",
+          "type": "string"
+        },
+        {
+          "name": "Last_Dispatch",
+          "type": "time"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "e1",
+      "type": "ArchiveOrder",
+      "time": "2024-01-01T12:34:56Z",
+      "attributes": [
+        {
+          "name": "total-orders",
+          "value": "1"
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "Order to Archive"
+        }
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "id": "o1",
+      "type": "order",
+      "attributes": [
+        {
+          "name": "Id",
+          "time": "2020-01-03",
+          "value": "1234"
+        },
+        {
+          "name": "Customer_Id",
+          "time": "2020-01-03",
+          "value": "5678"
+        },
+        {
+          "name": "TotalAmount",
+          "time": "2020-01-03",
+          "value": "1"
+        },
+        {
+          "name": "Content",
+          "time": "2020-01-03",
+          "value": "Servus, I am the Order 1234"
+        },
+        {
+          "name": "ReceivedAt",
+          "time": "2020-01-03",
+          "value": "2020-01-03"
+        }
+      ]
+    },
+    {
+      "id": "i1",
+      "type": "invoice",
+      "attributes": [
+        {
+          "name": "Id",
+          "time": "2020-01-03",
+          "value": "3456"
+        },
+        {
+          "name": "Content",
+          "time": "2020-01-03",
+          "value": "Hey! I am the Invoice 3456"
+        },
+        {
+          "name": "Last_Dispatch",
+          "time": "2020-01-03",
+          "value": "1970-01-01"
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "invoice from order"
+        }
+      ]
+    }
+  ]
+}
