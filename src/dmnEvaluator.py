@@ -1,4 +1,4 @@
-from dmnTable import DMNTable   
+from dmnTable import DMNTable, DMNInput
 from dmnInputType import DMNInputType 
 
 
@@ -69,40 +69,6 @@ class DMNEvaluator:
         self.functions_object = DMNObjectFunctions()
         
     
-    def _extractOperatorAndValue(self, condition):
-        value = None
-        operator = None
-        function = None
-        conditionSize = len(condition.split())
-        if (conditionSize == 1):
-            # two possibilities: either a function or a value
-            
-            # check if it is a function
-            if (condition.endswith(")")):
-                function = condition
-            else:
-                operator = "=="
-                value = condition
-        elif (conditionSize == 2):
-            operator = condition.split()[0]
-            value = condition.split()[1]
-        else:
-            raise ValueError(f"Invalid condition format. Condition: {condition}")
-        return function, operator, value
-        
-    def _refineFunction(self, functionType, function, object):
-        # Split the function name and the argument part
-        type = functionType.value
-        func_name, args = function.split("(")
-        args = args[:-1]  # Remove the closing parenthesis
-        
-        if args:
-            # If there are existing arguments, add value as the first argument
-            new_func_str = f"self.functions_{type}.{func_name}({object}, {args})"
-        else:
-            # If there are no existing arguments, just add the value
-            new_func_str = f"self.functions_{type}.{func_name}({object})"
-        return new_func_str
     
     def _refineValue(self, value):
         if value is None:
@@ -115,6 +81,116 @@ class DMNEvaluator:
             return value
         else:
             return f'"{value}"' 
+    
+    def _getObjectValue(self, object, attribute : DMNInput):
+        objectValue = getattr(object, attribute.label)
+        return self._refineValue(objectValue)
+    
+    def _isFunction(self, term):
+        return term.endswith(")")
+    
+    def _isOperator(self, term):
+        return term in ["==", "!=", ">", "<", ">=", "<="]
+    
+    def _isConjunction(self, term):
+        return term in ["and", "or"]
+    
+    def _isValue(self, term):
+        return (term is not None) and (term != "") and (not(self._isFunction(term))) and (not(self._isOperator(term))) and (not(self._isConjunction(term)))
+    
+    # given a function, return the inner function
+    # e.g. "not(exists())" -> "not, exists()"
+    def _splitFunctionInInnerAndOuter(self, function):
+        start = function.find("(")
+        end = function.rfind(")")
+        return function[:start],function[start+1:end]
+    
+    def smart_split(self, expression):
+        all_fragments = expression.split()
+        if (len(all_fragments) == 1):
+            return all_fragments
+        
+        fragments = []
+        
+        innerFunction = False
+        functionLevel = 0
+        for i, term in enumerate(all_fragments):
+            if "(" in term:
+                start = i
+                functionLevel += 1
+                innerFunction = True
+            if ")" in term:
+                end = i
+                functionLevel -= 1
+            if functionLevel == 0:
+                if innerFunction:
+                    fragments.append(" ".join(all_fragments[start:end+1]))
+                    innerFunction = False
+                else:
+                    fragments.append(term)
+        return fragments
+    
+    def _getExpression(self, object, input : DMNInput, condition : str):
+        fragment = condition.split()
+        fragment = self.smart_split(condition)
+        return self._evaluateExpression(object, input, None, fragment[0], fragment[1:])       
+    
+    def _evaluateExpression(self, object, input : DMNInput,prefix, term, fragment = []):
+        expression = ""
+        # add spacing if there is a prefix:
+        if (prefix is not None):
+            expression += " "
+            
+        if self._isFunction(term):
+            outerTerm, innerTerm = self._splitFunctionInInnerAndOuter(term)
+            innerTerm = self._evaluateInnerFunctionTerm(object, input, innerTerm)
+            outerTerm = self._evaluateOuterFunctionTerm(input, outerTerm)
+            expression += f"{outerTerm}({innerTerm})"
+            
+        elif self._isOperator(term):
+            if (not(self._isValue(prefix))):
+                expression += f"{self._getObjectValue(object, input)} "
+            expression += f"{term}"
+            
+        elif self._isConjunction(term):
+            expression += f"{term}"
+            
+        elif self._isValue(term):
+            if (prefix is None):
+                expression += f"{self._getObjectValue(object, input)} == "
+            expression += f"{term}"
+            
+        else:
+            raise ValueError(f"Invalid term: {term}")
+        
+        if (len(fragment) > 0):
+            expression += self._evaluateExpression(object, input, term, fragment[0], fragment[1:])
+        return expression
+
+    def _evaluateInnerFunctionTerm(self, object, input, innerTerm):
+        if (innerTerm == "" or innerTerm is None):
+            innerTerm = self._getObjectValue(object, input)
+        else:
+            fragment = self.smart_split(innerTerm)
+            if (len(fragment) == 1 and self._isValue(innerTerm)):
+                innerTerm = str(self._getObjectValue(object, input)) + "," + innerTerm
+            else:
+                if (len(fragment) == 1):
+                    innerTerm = self._evaluateExpression(object, input, None, fragment[0],[])
+                else:
+                    innerTerm = self._evaluateExpression(object, input, None, fragment[0], fragment[1:] )
+        return innerTerm
+        
+    def _evaluateOuterFunctionTerm(self,input : DMNInput, function):
+        buildInFunctions = ["not"]
+        if function in buildInFunctions:
+            return function
+        
+        type = input.type.value
+        return f"self.functions_{type}.{function}"
+        
+    
+
 
     def _replaceStatesWithBoolean(self, stateCondition, availableStates, currentStates):
         missingStates = list(set(availableStates) - set(currentStates))
@@ -132,11 +208,9 @@ class DMNEvaluator:
         return None
 
     def evaluate(self, object):
-        
         dmnTable = self.getDMNTable(object)
         if (dmnTable is None):
             raise ValueError(f"No DMNTable found for class: {object.clazz}\nPossible classes: {[table.tablename for table in self.dmnTables]}")
-        
         
         possibleStates = []
         for j, rule in enumerate(dmnTable.rules):
@@ -147,20 +221,11 @@ class DMNEvaluator:
                 input =  dmnTable.inputs[i]
                 if input.type == DMNInputType.state:
                     continue
-                function, operator, value = self._extractOperatorAndValue(condition)
-                objectValue = getattr(object, input.label)
-                objectValue = self._refineValue(objectValue)
-                if function is not None:
-                    function = self._refineFunction(input.type, function, objectValue)
-                    if (self.debugging):
-                        print(f"Executing function: {function}")
-                    ruleFulfilled = ruleFulfilled and eval(function)
-                elif operator is not None and value is not None:
-                    if (self.debugging):
-                        print(f"Evaluating term: {objectValue} {operator} {value}")
-                    ruleFulfilled = ruleFulfilled and eval(str(objectValue) + str(operator) + str(value))
-                else:
-                    raise ValueError(f"Invalid condition format. Condition: {condition}")
+                expression = self._getExpression(object, input, condition)
+                if (self.debugging):
+                    print(f"Expression: {expression}")
+                ruleFulfilled = ruleFulfilled and eval(expression)
+                
             if (self.debugging):
                 print(f"Rule {j} evaluated to: {ruleFulfilled}")
             if ruleFulfilled:

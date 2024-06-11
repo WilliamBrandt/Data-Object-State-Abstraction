@@ -1,13 +1,26 @@
 import unittest
+import sys
+import os
+
+# Calculate the path to the src directory relative to this file's location
+current_dir = os.path.dirname(__file__)
+src_dir = os.path.join(current_dir, '..')
+src_dir = os.path.abspath(src_dir)
+
+# Add the src directory to sys.path to make the imports work
+sys.path.append(src_dir)
+
 from dmnEvaluator import DMNEvaluator, DMNInputType
 from dmnTable import DMNTable, DMNInput
 from genericObject import GenericObject
 
+
 class TestDMNFunctions(unittest.TestCase):
 
     def setUp(self):
-        self.order = GenericObject(clazz="order", id=None,totalamount=150, invoice="asda-21231-a21as", history=[])
-        self.invoice = GenericObject(clazz="invoice", id="asda-21231-a21as", receiveDate=None, history=[])
+        invoiceId = "asda-21231-a21as"
+        self.order = GenericObject(clazz="order", id=None,totalamount=150, invoice= invoiceId, history=[])
+        self.invoice = GenericObject(clazz="invoice", id=invoiceId, receiveDate=None, history=[])
         self.objects = [self.order, self.invoice]
         
         input0 = DMNInput("id",DMNInputType.object)
@@ -29,7 +42,7 @@ class TestDMNFunctions(unittest.TestCase):
         
     def test_attribute_notNull(self):
         # set rule
-        self.orderDMN.add_rule(["notNull()","notNull()",None]) 
+        self.orderDMN.add_rule(["notNull()","notNull()",None,None]) 
         self.orderDMN.add_state("notNull")
         
         # test rules
@@ -42,16 +55,16 @@ class TestDMNFunctions(unittest.TestCase):
         
     def test_basicOperations(self):
         #add rules
-        self.orderDMN.add_rule([None,"150",None])
+        self.orderDMN.add_rule([None,"150",None,None])
         self.orderDMN.add_state("eq150")
-        self.orderDMN.add_rule([None,"190",None])
+        self.orderDMN.add_rule([None,"190",None,None])
         self.orderDMN.add_state("eq190")
-        self.orderDMN.add_rule([None,"> 100",None])
+        self.orderDMN.add_rule([None,"> 100",None,None])
         self.orderDMN.add_state("gr100")
-        self.orderDMN.add_rule([None,"> 1000",None])
+        self.orderDMN.add_rule([None,"> 1000",None,None])
         self.orderDMN.add_state("gr1000")
         self.order.id = "327aqwsd"
-        self.orderDMN.add_rule(["!= None",None,None])
+        self.orderDMN.add_rule(["!= None",None,None,None])
         self.orderDMN.add_state("NotNone")
                 
         # test rules
@@ -115,7 +128,7 @@ class TestDMNFunctions(unittest.TestCase):
         
     def test_crossStateEvaluation(self):
         # add rules
-        self.invoiceDMN.add_rule([None,None,"exists('SentInvoice')",None])
+        self.invoiceDMN.add_rule([None,None,"exists('SentInvoice')"])
         self.invoiceDMN.add_state("sent")
         
         self.orderDMN.add_rule([None,None,"inState('sent')",None])
@@ -130,6 +143,83 @@ class TestDMNFunctions(unittest.TestCase):
         states = self.evaluator.evaluate(self.order)
         self.assertIn("invoiced",states)
         
+    def test_evaluationOfMultipleConditions(self):
+        # add rules
+        self.orderDMN.add_rule([None,"< 200 and > 100",None,None])
+        self.orderDMN.add_state("between100and200")
+        self.orderDMN.add_rule([None, None, None, "exists('SentPayment') or exists('AbortPayment')"])
+        self.orderDMN.add_state("paymentSentOrAbort")
+        
+        # test rules
+        self.order.totalamount = 150
+        self.order.history = []
+        states = self.evaluator.evaluate(self.order)
+        self.assertIn("between100and200",states)
+        self.assertNotIn("paymentSentOrAbort",states)
+        
+        self.order.history = ["SentPayment"]
+        self.order.totalamount = 50
+        states = self.evaluator.evaluate(self.order)
+        self.assertNotIn("between100and200",states)
+        self.assertIn("paymentSentOrAbort",states)
+        
+        self.order.history = ["AbortPayment"]
+        states = self.evaluator.evaluate(self.order)
+        self.assertIn("paymentSentOrAbort",states)
 
-if __name__ == '__main__':
+    def test_extractOperatorAndValue(self):
+        input = DMNInput("totalamount",DMNInputType.object)
+        
+        self.order.totalamount = 150
+        condition = "100"
+        expression = self.evaluator._getExpression(self.order, input, condition)
+        self.assertEqual(expression, f"150 == {condition}")
+        
+        condition = "< 200"
+        expression = self.evaluator._getExpression(self.order, input, condition)
+        self.assertEqual(expression, f"150 {condition}")
+        
+        condition = "< 100 or < 200"
+        expression = self.evaluator._getExpression(self.order, input, condition)
+        self.assertEqual(expression, f"150 < 100 or 150 < 200")
+        
+        input = DMNInput("invoice",DMNInputType.relation)
+        
+        condition = "exists()"
+        expression = self.evaluator._getExpression(self.order, input, condition)
+        self.assertEqual(expression, f"self.functions_relation.exists(\"{self.order.invoice}\")")
+        
+        condition = "inState(\"sent\") or inState(\"paid\")"
+        expression = self.evaluator._getExpression(self.order, input, condition)
+        self.assertEqual(expression, f"self.functions_relation.inState(\"{self.order.invoice}\",\"sent\") or self.functions_relation.inState(\"{self.order.invoice}\",\"paid\")")
+
+        condition = "not(exists())"
+        expression = self.evaluator._getExpression(self.order, input, condition)
+        self.assertEqual(expression, f"not(self.functions_relation.exists(\"{self.order.invoice}\"))")
+        
+        
+    def test_evaluationOfComplexConditions(self):
+        # add rules
+        self.orderDMN.add_rule([None,None,"not(exists())",None])
+        self.orderDMN.add_state("invoiceNotPresent")
+        self.orderDMN.add_rule([None,"not(> 200 and < 1000)",None,None])
+        self.orderDMN.add_state("amountNotBetween200and1000")
+        
+        # test rules
+        self.order.invoice = None
+        self.order.totalamount = 150
+        states = self.evaluator.evaluate(self.order)
+        self.assertIn("invoiceNotPresent",states)
+        self.assertIn("amountNotBetween200and1000",states)
+        
+        self.order.invoice = self.invoice.id
+        self.order.totalamount = 500
+        states = self.evaluator.evaluate(self.order)
+        self.assertNotIn("invoiceNotPresent",states)
+        self.assertNotIn("amountNotBetween200and1000",states)
+        
+
+if __name__ == '__main__':    
     unittest.main()
+    
+    
