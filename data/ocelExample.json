@@ -52,7 +52,7 @@
           "type": "time"
         },
         {
-          "name": "ReceiveDate",
+          "name": "ReceivedAt",
           "type": "date"
         }
       ]
@@ -86,11 +86,6 @@
           "name": "id",
           "time": "2020-01-03",
           "value": "1234"
-        },
-        {
-          "name": "customer_Id",
-          "time": "2020-01-03",
-          "value": "5678"
         },
         {
           "name": "confirmed",
@@ -132,6 +127,38 @@
           "name": "receivedAt",
           "time": "2020-01-03",
           "value": "2020-01-03"
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "invoice from order"
+        }
+      ]
+    },
+    {
+      "id": "i2",
+      "type": "invoice",
+      "attributes": [
+        {
+          "name": "Id",
+          "time": "2020-01-04",
+          "value": "34889"
+        },
+        {
+          "name": "Content",
+          "time": "2020-01-04",
+          "value": "Hey! I am the Invoice 34889"
+        },
+        {
+          "name": "Last_Dispatch",
+          "time": "2020-01-04",
+          "value": "1970-01-02"
+        },
+        {
+          "name": "receivedAt",
+          "time": "2020-01-04",
+          "value": "2020-01-04"
         }
       ],
       "relationships": [

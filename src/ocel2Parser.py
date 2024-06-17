@@ -1,3 +1,4 @@
+import datetime
 import json
 from jsonschema import validate, ValidationError
 import requests
@@ -32,6 +33,19 @@ class OCELParser:
         self.load_json()
         self.validate_json()
         return self.json_data
+
+
+def check_null(param):
+    if param is None:
+        return None
+    elif param.lower() == "none":
+        return None
+    elif param.lower() == "null":
+        return None
+    elif not param:
+        return None
+    else:
+        return param
 
 
 class OCEL:
@@ -94,6 +108,20 @@ class OCEL:
             for relationship in event['relationships']:
                 self.add_event_object(event['id'], relationship["objectId"], relationship["qualifier"])
         for obj in json_data['objects']:
+            attributes = obj['attributes']
+            objectTypeAttributes = self.object_type[obj['type']]['attributes']
+            new_attributes = []
+            # ensure that saved object has all attributes of its type
+            for object_attribute in objectTypeAttributes:
+                if object_attribute['name'].lower() not in [attr['name'].lower() for attr in attributes]:
+                    attribute = {'name': object_attribute['name'], 'time': None, 'value': None}
+                    attributes.append(attribute)
+            # ensure common null handling of attribute values
+            for attribute in attributes:
+                attribute['value'] = check_null(attribute['value'])
+                new_attributes.append(attribute)
+
+            obj['attributes'] = new_attributes
             self.add_object(obj['id'], obj)
             if 'relationships' in obj:
                 for rel_obj in obj['relationships']:
@@ -110,12 +138,14 @@ class OCEL:
         return history_names
 
     def get_related_objects(self, object_id):
-        related_objects = []
+        related_objects = {}
         for obj_obj in self.object_objects:
             if object_id == obj_obj["ocel_source_id"]:
-                related_objects.append(obj_obj["ocel_target_id"])
+                object_type = self.objects[obj_obj["ocel_target_id"]]['type']
+                related_objects.setdefault(object_type, []).append(obj_obj["ocel_target_id"])
             if object_id == obj_obj["ocel_target_id"]:
-                related_objects.append(obj_obj["ocel_source_id"])
+                object_type = self.objects[obj_obj["ocel_source_id"]]['type']
+                related_objects.setdefault(object_type, []).append(obj_obj["ocel_source_id"])
         return related_objects
 
     def get_objects_with_history_and_foreign_key(self):
@@ -128,23 +158,17 @@ class OCEL:
             for attribute in attributes:
                 current_object.__dict__[attribute['name']] = attribute['value']
 
-            history = self.get_history_for_object(obj_id)
-            current_object.history = history
-
-            related_objects = self.get_related_objects(obj_id)
+            current_object.history = self.get_history_for_object(obj_id)
             # add related objects as attribute
-            for related_object in related_objects:
-                related_object_type = self.objects[related_object]['type']
-                current_object.__dict__[related_object_type] = related_object
-            # alternative, return list of related objects
+            current_object.related_objects = self.get_related_objects(obj_id)
             # current_object.related_objects = related_objects
             objects.append(current_object)
         return objects
 
-# ocel = OCEL()
-# ocel.parse_and_store()
-# #print(ocel.get_object_objects())
-# #print(ocel.get_related_objects('o1'))
-# print(ocel.get_objects_with_history_and_foreign_key())
-# for obj in ocel.get_objects_with_history_and_foreign_key():
-#     print(obj.__str__())
+ocel = OCEL()
+ocel.parse_and_store('../data/ocelExample.json')
+#print(ocel.get_object_objects())
+#print(ocel.get_related_objects('o1'))
+print(ocel.get_objects_with_history_and_foreign_key())
+for obj in ocel.get_objects_with_history_and_foreign_key():
+     print(obj.__str__())
