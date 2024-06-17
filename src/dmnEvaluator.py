@@ -71,7 +71,7 @@ class DMNEvaluator:
     
     
     def _refineValue(self, value):
-        if value is None:
+        if value is None or value == "" or value == "None":
             return "None"
         elif isinstance (value, list):
             return value
