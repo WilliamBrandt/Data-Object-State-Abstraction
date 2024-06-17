@@ -169,8 +169,12 @@ class DMNEvaluator:
             expression += self._evaluateExpression(object, input, term, fragment[0], fragment[1:])
         return expression
 
+    def _evaluateRelationFunctionTerm(self, object, input : DMNInput, innerTerm):
+        return object.related_objects[input.label]
     def _evaluateInnerFunctionTerm(self, object, input, innerTerm):
-        if (innerTerm == "" or innerTerm is None):
+        if input.type == DMNInputType.relation:
+            innerTerm = self._evaluateRelationFunctionTerm(object, input, innerTerm)
+        elif (innerTerm == "" or innerTerm is None):
             innerTerm = self._getObjectValue(object, input)
         else:
             fragment = self.smart_split(innerTerm)

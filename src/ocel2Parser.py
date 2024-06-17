@@ -165,10 +165,10 @@ class OCEL:
             objects.append(current_object)
         return objects
 
-ocel = OCEL()
-ocel.parse_and_store('../data/ocelExample.json')
+#ocel = OCEL()
+#ocel.parse_and_store('../data/ocelExample.json')
 #print(ocel.get_object_objects())
 #print(ocel.get_related_objects('o1'))
-print(ocel.get_objects_with_history_and_foreign_key())
-for obj in ocel.get_objects_with_history_and_foreign_key():
-     print(obj.__str__())
+#print(ocel.get_objects_with_history_and_foreign_key())
+#for obj in ocel.get_objects_with_history_and_foreign_key():
+#     print(obj.__str__())
