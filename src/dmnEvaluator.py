@@ -170,7 +170,10 @@ class DMNEvaluator:
         return expression
 
     def _evaluateRelationFunctionTerm(self, object, input : DMNInput, innerTerm):
-        return object.related_objects[input.label]
+        relatedObjects = str(object.related_objects[input.label])
+        if innerTerm == "" or innerTerm is None:
+            return relatedObjects
+        return relatedObjects + "," + innerTerm
     def _evaluateInnerFunctionTerm(self, object, input, innerTerm):
         if input.type == DMNInputType.relation:
             innerTerm = self._evaluateRelationFunctionTerm(object, input, innerTerm)
