@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="definitions_0t5zyj9" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="16.4.0">
-  <decision id="decision_1melyy5" name="class.order">
-    <decisionTable id="decisionTable_1cy8n2o" hitPolicy="ANY">
+  <decision id="decision_1melyy5" name="order">
+    <decisionTable id="decisionTable_1cy8n2o" hitPolicy="COLLECT">
       <input id="InputClause_1qqwx65" label="state">
         <inputExpression id="LiteralExpression_1ioox59" typeRef="string">
           <text></text>

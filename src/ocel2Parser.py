@@ -121,8 +121,7 @@ class OCEL:
     def get_objects_with_history_and_foreign_key(self):
         objects = []
         for obj_id, obj in self.objects.items():
-            clazz = "class." + obj['type']
-            current_object = GenericObject(clazz=clazz, id=obj_id)
+            current_object = GenericObject(clazz=obj['type'], id=obj_id)
 
             attributes = obj['attributes']
             for attribute in attributes:
