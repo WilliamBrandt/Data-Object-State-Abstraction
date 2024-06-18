@@ -72,6 +72,7 @@ class DMNEvaluator:
         self.graph = DMNGraph(dmn_tables, debugging)
 
         if self.graph.isCyclic():
+            print("Cyclic dependency in DMNTables! Cannot evaluate cyclic dependencies.")
             self.visualizeGraph()
             raise ValueError("Cyclic dependency in DMNTables! Cannot evaluate cyclic dependencies.")
         
