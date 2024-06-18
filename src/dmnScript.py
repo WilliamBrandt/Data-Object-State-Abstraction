@@ -28,14 +28,6 @@ objects = ocel.get_objects_with_history_and_foreign_key()
 object = objects[0]
 print (object)
 
-
-# old example
-# invoiceId = "asda-21231-a21as"
-# order = GenericObject(clazz="class.order", id="123", totalamount=150, confirmed=True, history=['Create Invoice', "ArchiveOrder"], invoice=invoiceId)
-# invoice = GenericObject (clazz="class.invoice", id = invoiceId, receivedate="2024-05-30", history=["SentInvoice"])
-# objects = [order, invoice]
-# object = order
-
 evaluator = DMNEvaluator(dmnTables, objects, debugging=True)
 
 # evaluator.visualizeGraph()
