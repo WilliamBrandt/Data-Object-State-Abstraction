@@ -37,6 +37,8 @@ print (object)
 # object = order
 
 evaluator = DMNEvaluator(dmnTables, objects, debugging=True)
+
+# evaluator.visualizeGraph()
 validStates = evaluator.evaluate(object)
 
 print(validStates)

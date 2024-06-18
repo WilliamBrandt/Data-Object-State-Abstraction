@@ -1,5 +1,6 @@
 from dmnTable import DMNTable, DMNInput
 from dmnInputType import DMNInputType 
+from dmnGraph import DMNGraph
 
 
 class DMNObjectFunctions():
@@ -68,7 +69,15 @@ class DMNEvaluator:
         self.functions_relation = DMNRelationFunctions(self, objects)
         self.functions_object = DMNObjectFunctions()
         
-    
+        self.graph = DMNGraph(dmn_tables, debugging)
+
+        if self.graph.isCyclic():
+            self.visualizeGraph()
+            raise ValueError("Cyclic dependency in DMNTables! Cannot evaluate cyclic dependencies.")
+        
+    def visualizeGraph(self):
+        self.graph.drawGraph()
+
     
     def _refineValue(self, value):
         if value is None:
