@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="definitions_1e2stvb" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="16.4.0">
-  <decision id="decision_0a93vpn" name="class.invoice">
+  <decision id="decision_0a93vpn" name="invoice">
     <decisionTable id="decisionTable_0m3vbq4" hitPolicy="ANY">
       <input id="InputClause_13pby60" label="state">
         <inputExpression id="LiteralExpression_1ybgws7" typeRef="string">

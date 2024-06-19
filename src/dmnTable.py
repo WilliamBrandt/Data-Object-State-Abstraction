@@ -36,7 +36,7 @@ class DMNTable:
 
         self.rules.append(conditions)
 
-    def add_state(self, state):
+    def add_state(self, state : str):
         if state not in self.states:
             self.states.append(state)
             
