@@ -180,19 +180,25 @@ class DMNEvaluator:
         return expression
 
     def _evaluateRelationFunctionTerm(self, object, input : DMNInput, innerTerm):
-        relatedObjects = str(object.related_objects[input.label])
-        if innerTerm == "" or innerTerm is None:
-            return relatedObjects
-        return relatedObjects + "," + innerTerm
+        if input.label in object.related_objects:
+            relatedObjects = self._refineValue(object.related_objects[input.label][0])
+            if innerTerm == "" or innerTerm is None:
+                return relatedObjects
+            return relatedObjects + "," + innerTerm
+        return None
     def _evaluateInnerFunctionTerm(self, object, input, innerTerm):
-        if input.type == DMNInputType.relation:
-            innerTerm = self._evaluateRelationFunctionTerm(object, input, innerTerm)
-        elif (innerTerm == "" or innerTerm is None):
-            innerTerm = self._getObjectValue(object, input)
+        if (innerTerm == "" or innerTerm is None):
+            if input.type == DMNInputType.relation:
+                innerTerm = self._evaluateRelationFunctionTerm(object, input, innerTerm)
+            else:
+                innerTerm = self._getObjectValue(object, input)
         else:
             fragment = self.smart_split(innerTerm)
             if (len(fragment) == 1 and self._isValue(innerTerm)):
-                innerTerm = str(self._getObjectValue(object, input)) + "," + innerTerm
+                if input.type == DMNInputType.relation:
+                    innerTerm = self._evaluateRelationFunctionTerm(object, input, innerTerm)
+                else:
+                    innerTerm = str(self._getObjectValue(object, input)) + "," + innerTerm
             else:
                 if (len(fragment) == 1):
                     innerTerm = self._evaluateExpression(object, input, None, fragment[0],[])

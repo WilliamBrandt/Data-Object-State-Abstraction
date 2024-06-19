@@ -5,7 +5,8 @@ from ocel2Parser import OCEL
 import pathlib
 
 # Define paths to data files
-path = str(pathlib.Path().resolve())
+#path = str(pathlib.Path().resolve())
+path = '/Users/williambrandt/PycharmProjects/makeStatesGreatAgain'
 orderDMNpath = path + '/data/orderStateDMN.dmn'
 invoiceDMNpath = path + '/data/invoiceStateDMN.dmn'
 ocelPath = path + '/data/ocelExample.json'
