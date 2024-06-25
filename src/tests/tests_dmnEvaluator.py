@@ -92,7 +92,35 @@ class TestDMNFunctions(unittest.TestCase):
         states = self.evaluator.evaluate(self.order)
         self.assertIn("createInvoice",states)
         self.assertIn("archiveOrder",states)
-        
+
+    def test_relationFunctionAmount(self):
+        # add rules
+        self.orderDMN.add_rule([None,None,"amount() > 0 ",None])
+        self.orderDMN.add_state("invoicePresent")
+
+        # test rules
+        self.order.related_objects = {}
+        states = self.evaluator.evaluate(self.order)
+        self.assertNotIn("invoicePresent",states)
+        self.order.related_objects['invoice'] = [self.invoice.id]
+        states = self.evaluator.evaluate(self.order)
+        self.assertIn("invoicePresent",states)
+
+    def test_relationFunctionAmountWithState(self):
+        #add rules
+        self.orderDMN.add_rule([None,None,"amount('sent') > 0",None])
+        self.orderDMN.add_state("invoiceSent")
+        self.invoiceDMN.add_rule([None, None, "exists('SentInvoice')"])
+        self.invoiceDMN.add_state("sent")
+
+        #test rules
+        self.invoice.history = []
+        states = self.evaluator.evaluate(self.order)
+        self.assertNotIn("invoiceSent",states)
+        self.invoice.history = ["SentInvoice"]
+        states = self.evaluator.evaluate(self.order)
+        self.assertIn("invoiceSent",states)
+
     def test_relationFunctions(self):
         # add rules
         self.invoiceDMN.add_rule([None,"== None",None])
@@ -100,9 +128,9 @@ class TestDMNFunctions(unittest.TestCase):
         self.invoiceDMN.add_rule([None,"!= None",None])
         self.invoiceDMN.add_state("paid")
         
-        self.orderDMN.add_rule([None,None,"inState('paid')",None])
+        self.orderDMN.add_rule([None,None,"amount('paid') == 1",None])
         self.orderDMN.add_state("paid")
-        self.orderDMN.add_rule([None,None,"inState('unpaid')",None])
+        self.orderDMN.add_rule([None,None,"amount('unpaid') == 1",None])
         self.orderDMN.add_state("unpaid")
 
         #test rules
@@ -116,7 +144,7 @@ class TestDMNFunctions(unittest.TestCase):
         
     def test_relationFunction_exists(self):
         # add rules
-        self.orderDMN.add_rule([None,None,"exists()",None])
+        self.orderDMN.add_rule([None,None,"amount() == 1",None])
         self.orderDMN.add_state("invoiced")
 
         # test rules
@@ -133,7 +161,7 @@ class TestDMNFunctions(unittest.TestCase):
         self.invoiceDMN.add_rule([None,None,"exists('SentInvoice')"])
         self.invoiceDMN.add_state("sent")
         
-        self.orderDMN.add_rule([None,None,"inState('sent')",None])
+        self.orderDMN.add_rule([None,None,"amount('sent') == 1",None])
         self.orderDMN.add_state("invoiced")
         
         # test rules
@@ -187,22 +215,22 @@ class TestDMNFunctions(unittest.TestCase):
         
         input = DMNInput("invoice",DMNInputType.relation)
         
-        condition = "exists()"
+        condition = "amount()"
         expression = self.evaluator._getExpression(self.order, input, condition)
-        self.assertEqual(expression, f"self.functions_relation.exists(\"{self.order.related_objects['invoice'][0]}\")")
+        self.assertEqual(expression, f"self.functions_relation.amount(\'{self.order.id}\',\'invoice\')")
         
-        condition = "inState(\"sent\") or inState(\"paid\")"
+        condition = "amount(\'sent\') == 1 or amount(\'paid\') == 1"
         expression = self.evaluator._getExpression(self.order, input, condition)
-        self.assertEqual(expression, f"self.functions_relation.inState(\"{self.order.related_objects['invoice']}\",\"sent\") or self.functions_relation.inState(\"{self.order.related_objects['invoice']}\",\"paid\")")
+        self.assertEqual(expression, f"self.functions_relation.amount(\'{self.order.id}\',\'invoice\',\'sent\') == 1 or self.functions_relation.amount(\'{self.order.id}\',\'invoice\',\'paid\') == 1")
 
-        condition = "not(exists())"
+        condition = "amount() == 0"
         expression = self.evaluator._getExpression(self.order, input, condition)
-        self.assertEqual(expression, f"not(self.functions_relation.exists(\"{self.order.related_objects['invoice']}\"))")
+        self.assertEqual(expression, f"self.functions_relation.amount(\'{self.order.id}\',\'invoice\') == 0")
         
         
     def test_evaluationOfComplexConditions(self):
         # add rules
-        self.orderDMN.add_rule([None,None,"not(exists())",None])
+        self.orderDMN.add_rule([None,None,"amount() == 0",None])
         self.orderDMN.add_state("invoiceNotPresent")
         self.orderDMN.add_rule([None,"not(> 200 and < 1000)",None,None])
         self.orderDMN.add_state("amountNotBetween200and1000")
@@ -214,7 +242,7 @@ class TestDMNFunctions(unittest.TestCase):
         self.assertIn("invoiceNotPresent",states)
         self.assertIn("amountNotBetween200and1000",states)
         
-        self.order.related_objects['invoice'] = self.invoice.id
+        self.order.related_objects['invoice'] = [self.invoice.id]
         self.order.totalamount = 500
         states = self.evaluator.evaluate(self.order)
         self.assertNotIn("invoiceNotPresent",states)
