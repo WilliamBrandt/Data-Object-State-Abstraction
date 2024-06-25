@@ -96,7 +96,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_1h02qo1">
-          <text>exists()</text>
+          <text>amount() &gt; 0</text>
         </inputEntry>
         <inputEntry id="UnaryTests_0oxgde1">
           <text></text>
@@ -119,7 +119,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_0v606at">
-          <text>inState("paid")</text>
+          <text>amount("paid") &gt; 0</text>
         </inputEntry>
         <inputEntry id="UnaryTests_12t2ebc">
           <text></text>
@@ -145,7 +145,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_04mjd5f">
-          <text>exists("ArchiveOrder")</text>
+          <text>amount("ArchiveOrder") == 1</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1kprz4i">
           <text>archived</text>

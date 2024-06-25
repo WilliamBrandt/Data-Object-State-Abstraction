@@ -51,7 +51,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_0xy0cyi">
-          <text>exists("SentInvoice")</text>
+          <text>amount("SentInvoice") == 1</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0er279m">
           <text>sent</text>
