@@ -5,10 +5,10 @@ from ocel2Parser import OCEL
 import pathlib
 
 # Define paths to data files
-path = str(pathlib.Path().resolve())
-orderDMNpath = path + '/data/orderStateDMN.dmn'
-invoiceDMNpath = path + '/data/invoiceStateDMN.dmn'
-ocelPath = path + '/data/ocelExample.json'
+#path = str(pathlib.Path().resolve())
+orderDMNpath =  'data/orderStateDMN.dmn'
+invoiceDMNpath = 'data/invoiceStateDMN.dmn'
+ocelPath = 'data/ocelExample.json'
 
 # Parse DMN tables
 parser = DMNParser()

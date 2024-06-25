@@ -52,7 +52,7 @@
           "type": "time"
         },
         {
-          "name": "ReceiveDate",
+          "name": "ReceivedAt",
           "type": "date"
         }
       ]
@@ -86,11 +86,6 @@
           "name": "id",
           "time": "2020-01-03",
           "value": "1234"
-        },
-        {
-          "name": "customer_Id",
-          "time": "2020-01-03",
-          "value": "5678"
         },
         {
           "name": "confirmed",
