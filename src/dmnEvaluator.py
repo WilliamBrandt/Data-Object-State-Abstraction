@@ -181,7 +181,7 @@ class DMNEvaluator:
 
     def _evaluateRelationFunctionTerm(self, object, input : DMNInput, innerTerm):
         if input.label in object.related_objects:
-            relatedObjects = self._refineValue(object.related_objects[input.label])
+            relatedObjects = self._refineValue(object.related_objects[input.label][0])
             if innerTerm == "" or innerTerm is None:
                 return relatedObjects
             return relatedObjects + "," + innerTerm

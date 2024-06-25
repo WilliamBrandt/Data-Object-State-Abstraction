@@ -10,9 +10,9 @@ src_dir = os.path.abspath(src_dir)
 # Add the src directory to sys.path to make the imports work
 sys.path.append(src_dir)
 
-from src.dmnEvaluator import DMNEvaluator, DMNInputType
-from src.dmnTable import DMNTable, DMNInput
-from src.genericObject import GenericObject
+from dmnEvaluator import DMNEvaluator, DMNInputType
+from dmnTable import DMNTable, DMNInput
+from genericObject import GenericObject
 
 
 class TestDMNFunctions(unittest.TestCase):
@@ -20,8 +20,8 @@ class TestDMNFunctions(unittest.TestCase):
     def setUp(self):
         invoiceId = "a-bb1s2345678"
         orderId = "a-bb876s54321"
-        self.order = GenericObject(clazz="order", id=orderId,totalamount=150, history=[], related_objects={"invoice": invoiceId})
-        self.invoice = GenericObject(clazz="invoice", id=invoiceId, receiveDate=None, history=[], related_objects={"order": orderId})
+        self.order = GenericObject(clazz="order", id=orderId,totalamount=150, history=[], related_objects={"invoice": [invoiceId]})
+        self.invoice = GenericObject(clazz="invoice", id=invoiceId, receiveDate=None, history=[], related_objects={"order": [orderId]})
         self.objects = [self.order, self.invoice]
         
         input0 = DMNInput("id",DMNInputType.object)
@@ -189,7 +189,7 @@ class TestDMNFunctions(unittest.TestCase):
         
         condition = "exists()"
         expression = self.evaluator._getExpression(self.order, input, condition)
-        self.assertEqual(expression, f"self.functions_relation.exists(\"{self.order.related_objects['invoice']}\")")
+        self.assertEqual(expression, f"self.functions_relation.exists(\"{self.order.related_objects['invoice'][0]}\")")
         
         condition = "inState(\"sent\") or inState(\"paid\")"
         expression = self.evaluator._getExpression(self.order, input, condition)
