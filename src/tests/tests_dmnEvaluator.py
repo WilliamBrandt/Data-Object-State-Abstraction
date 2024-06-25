@@ -39,20 +39,7 @@ class TestDMNFunctions(unittest.TestCase):
         
         dmnTables = [self.orderDMN, self.invoiceDMN]
                 
-        self.evaluator = DMNEvaluator(dmnTables, self.objects, debugging=True)    
-        
-    def test_attribute_notNull(self):
-        # set rule
-        self.orderDMN.add_rule(["notNull()","notNull()",None,None]) 
-        self.orderDMN.add_state("notNull")
-        
-        # test rules
-        self.order.id = None
-        states = self.evaluator.evaluate(self.order)
-        self.assertNotIn("notNull",states)
-        self.order.id = 123
-        states = self.evaluator.evaluate(self.order)
-        self.assertIn("notNull", states)
+        self.evaluator = DMNEvaluator(dmnTables, self.objects, debugging=True)
         
         
     def test_basicOperations(self):
@@ -79,9 +66,9 @@ class TestDMNFunctions(unittest.TestCase):
     
     def test_historyFunctions(self):
         # add rules
-        self.orderDMN.add_rule([None,None,None,"exists('CreateInvoice')"])
+        self.orderDMN.add_rule([None,None,None,"amount('CreateInvoice') == 1"])
         self.orderDMN.add_state("createInvoice")
-        self.orderDMN.add_rule([None,None,None,"exists('ArchiveOrder')"])
+        self.orderDMN.add_rule([None,None,None,"amount('ArchiveOrder') == 2"])
         self.orderDMN.add_state("archiveOrder")
                 
         # test rules
@@ -89,6 +76,10 @@ class TestDMNFunctions(unittest.TestCase):
         self.assertNotIn("createInvoice",states)
         self.assertNotIn("archiveOrder",states)
         self.order.history = ["CreateInvoice", "ArchiveOrder"]
+        states = self.evaluator.evaluate(self.order)
+        self.assertIn("createInvoice",states)
+        self.assertNotIn("archiveOrder",states)
+        self.order.history = ["CreateInvoice", "ArchiveOrder", "ArchiveOrder"]
         states = self.evaluator.evaluate(self.order)
         self.assertIn("createInvoice",states)
         self.assertIn("archiveOrder",states)
@@ -110,7 +101,7 @@ class TestDMNFunctions(unittest.TestCase):
         #add rules
         self.orderDMN.add_rule([None,None,"amount('sent') > 0",None])
         self.orderDMN.add_state("invoiceSent")
-        self.invoiceDMN.add_rule([None, None, "exists('SentInvoice')"])
+        self.invoiceDMN.add_rule([None, None, "amount('SentInvoice') == 1"])
         self.invoiceDMN.add_state("sent")
 
         #test rules
@@ -158,7 +149,7 @@ class TestDMNFunctions(unittest.TestCase):
         
     def test_crossStateEvaluation(self):
         # add rules
-        self.invoiceDMN.add_rule([None,None,"exists('SentInvoice')"])
+        self.invoiceDMN.add_rule([None,None,"amount('SentInvoice') == 1"])
         self.invoiceDMN.add_state("sent")
         
         self.orderDMN.add_rule([None,None,"amount('sent') == 1",None])
@@ -177,7 +168,7 @@ class TestDMNFunctions(unittest.TestCase):
         # add rules
         self.orderDMN.add_rule([None,"< 200 and > 100",None,None])
         self.orderDMN.add_state("between100and200")
-        self.orderDMN.add_rule([None, None, None, "exists('SentPayment') or exists('AbortPayment')"])
+        self.orderDMN.add_rule([None, None, None, "amount('SentPayment') == 1 or amount('AbortPayment') == 1"])
         self.orderDMN.add_state("paymentSentOrAbort")
         
         # test rules

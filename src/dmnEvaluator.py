@@ -3,16 +3,9 @@ from dmnInputType import DMNInputType
 from dmnGraph import DMNGraph
 
 
-class DMNObjectFunctions():
-    # depracted! not necessary
-    # question is this class necessary at all?
-    def notNull(self, value):
-        return value is not None
-
-
 class DMNHistoryFunctions():
-    def exists(self, value, event):
-        return event in value
+    def amount(self, log, event):
+        return log.count(event)
 
 
 class DMNRelationFunctions():
@@ -83,7 +76,6 @@ class DMNEvaluator:
         self.dmnTables = dmn_tables
         self.functions_history = DMNHistoryFunctions()
         self.functions_relation = DMNRelationFunctions(self, objects)
-        self.functions_object = DMNObjectFunctions()
 
         self.graph = DMNGraph(dmn_tables, debugging)
 
