@@ -34,20 +34,12 @@
       "name": "order",
       "attributes": [
         {
-          "name": "Price",
+          "name": "price",
           "type": "integer"
         },
         {
-          "name": "Content",
-          "type": "string"
-        },
-        {
-          "name": "Confirmed",
+          "name": "confirmed",
           "type": "boolean"
-        },
-        {
-          "name": "ReceivedAt",
-          "type": "time"
         }
       ]
     },
@@ -55,16 +47,8 @@
       "name": "invoice",
       "attributes": [
         {
-          "name": "Content",
+          "name": "content",
           "type": "string"
-        },
-        {
-          "name": "Last_Dispatch",
-          "type": "time"
-        },
-        {
-          "name": "ReceivedAt",
-          "type": "date"
         }
       ]
     },
@@ -72,15 +56,15 @@
       "name": "product",
       "attributes": [
         {
-          "name": "Name",
+          "name": "name",
           "type": "string"
         },
         {
-          "name": "Price",
+          "name": "price",
           "type": "integer"
         },
         {
-          "name": "Quality",
+          "name": "quality",
           "type": "string"
         }
       ]
@@ -89,11 +73,11 @@
       "name": "payment",
       "attributes": [
         {
-          "name": "Amount",
+          "name": "amount",
           "type": "integer"
         },
         {
-          "name": "ReceivedAt",
+          "name": "receivedAt",
           "type": "time"
         }
       ]
@@ -192,23 +176,13 @@
       "type": "order",
       "attributes": [
         {
-          "name": "Confirmed",
-          "value": "False",
+          "name": "confirmed",
+          "value": "True",
           "time":"2023-05-22T11:54:42.000Z"
         },
         {
-          "name": "Price",
+          "name": "price",
           "value": "100",
-          "time":"2023-05-22T11:54:42.000Z"
-        },
-        {
-          "name": "Content",
-          "value": "Order content",
-          "time":"2023-05-22T11:54:42.000Z"
-        },
-        {
-          "name": "ReceivedAt",
-          "value": "2023-05-22T11:54:42.000Z",
           "time":"2023-05-22T11:54:42.000Z"
         }
       ]
@@ -218,19 +192,9 @@
       "type": "invoice",
       "attributes": [
         {
-          "name": "Content",
+          "name": "content",
           "time": "2020-01-03",
           "value": "Hey! I am the Invoice 3456"
-        },
-        {
-          "name": "Last_Dispatch",
-          "time": "2020-01-03",
-          "value": "1970-01-01"
-        },
-        {
-          "name": "ReceivedAt",
-          "time": "2020-01-03",
-          "value": "2020-01-03"
         }
       ],
       "relationships": [
@@ -245,17 +209,17 @@
       "type": "product",
       "attributes": [
         {
-          "name": "Name",
+          "name": "name",
           "value": "Product 1",
           "time":"2023-05-22T11:54:42.000Z"
         },
         {
-          "name": "Price",
+          "name": "price",
           "value": "100",
           "time":"2023-05-22T11:54:42.000Z"
         },
         {
-          "name": "Quality",
+          "name": "quality",
           "value": "Good",
           "time":"2023-05-22T11:54:42.000Z"
         }
@@ -272,12 +236,12 @@
       "type": "payment",
       "attributes": [
         {
-          "name": "Amount",
+          "name": "amount",
           "value": "100",
           "time":"2023-05-22T11:54:42.000Z"
         },
         {
-          "name": "ReceivedAt",
+          "name": "receivedAt",
           "value": "2023-05-22T11:54:42.000Z",
           "time":"2023-05-22T11:54:42.000Z"
         }

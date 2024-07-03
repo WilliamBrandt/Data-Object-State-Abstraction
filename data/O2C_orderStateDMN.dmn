@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions_17g2i2l" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="16.4.0">
+  <decision id="decision_0c62b6h" name="order">
+    <decisionTable id="decisionTable_0fna2u8" hitPolicy="COLLECT">
+      <input id="input1" label="state" biodi:width="192">
+        <inputExpression id="inputExpression1" typeRef="Any">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0wjzh6r" label="object.id">
+        <inputExpression id="LiteralExpression_07u5gw0" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0fwqhkb" label="object.price">
+        <inputExpression id="LiteralExpression_0f2vpk4" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1j21pul" label="relation.invoice">
+        <inputExpression id="LiteralExpression_1rtcvv9" typeRef="Any">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1i2ge2o" label="relation.product">
+        <inputExpression id="LiteralExpression_0f5u1ln" typeRef="Any">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0xxvp2s" label="history">
+        <inputExpression id="LiteralExpression_139g0i3" typeRef="Any">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="output1" label="state" name="" typeRef="string" biodi:width="192" />
+      <rule id="DecisionRule_0ivf4mz">
+        <inputEntry id="UnaryTests_0vcxg6t">
+          <text>not(valid)</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ooibrk">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0uzz1zl">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_10mboid">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_01ylspm">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0doiylk">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_07isf3n">
+          <text>not valid</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0x8ekeu">
+        <inputEntry id="UnaryTests_0h995op">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_04wm4fo">
+          <text>!= None</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_09zhlzy">
+          <text>&gt; 0</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1d2ztdj">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1b4ach5">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_107n3ua">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_03dk277">
+          <text>valid</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1kzwp3l">
+        <inputEntry id="UnaryTests_0uhfjvi">
+          <text>valid and not(paid)</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1pb20v4">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1u72dgr">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1qb5xnd">
+          <text>amount() == 1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0o7espb">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0vfn603">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0l1towt">
+          <text>invoiced</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_016mswu">
+        <inputEntry id="UnaryTests_1av38h1">
+          <text>valid</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1sk65li">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_035kxmn">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_07gjkya">
+          <text>amount("paid") == 1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ma1o98">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02yw1sz">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1c2vogp">
+          <text>paid</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0i96uk3">
+        <inputEntry id="UnaryTests_18q28k5">
+          <text>valid and not(sent)</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0drh7j5">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0r2694o">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1evvdd5">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1wbl5ep">
+          <text>amount() == 1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02xm6c7">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_01kx3b7">
+          <text>ready</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_08dk14d">
+        <inputEntry id="UnaryTests_1uyn3up">
+          <text>valid </text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_065j9s7">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ctcdgx">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1m0po4d">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_048crg3">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_00z1qv5">
+          <text>amount("SendOrder") == 1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1yv6erq">
+          <text>sent</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_01ti5ua">
+        <inputEntry id="UnaryTests_1y4lkin">
+          <text>valid</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0xiuc1r">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ug32uk">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1gl4fgy">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0r6yi9d">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0zawzu1">
+          <text>amount("ArchiveOrder") == 1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0nno7sg">
+          <text>archived</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>

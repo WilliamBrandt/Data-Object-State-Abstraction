@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions_1e2stvb" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="16.4.0">
+  <decision id="decision_0a93vpn" name="invoice">
+    <decisionTable id="decisionTable_0m3vbq4" hitPolicy="COLLECT">
+      <input id="InputClause_13pby60" label="state" biodi:width="192">
+        <inputExpression id="LiteralExpression_1ybgws7" typeRef="Any">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="input1" label="object.id">
+        <inputExpression id="inputExpression1" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0mirflu" label="history" biodi:width="192">
+        <inputExpression id="LiteralExpression_156885m" typeRef="Any">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_17pgjn5" label="relation.payment">
+        <inputExpression id="LiteralExpression_1gjcwmi" typeRef="Any">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="output1" label="state" name="" typeRef="string" />
+      <rule id="DecisionRule_0pvgq5h">
+        <inputEntry id="UnaryTests_0uuxtmq">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1hxh4d6">
+          <text>!= None</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ciucg2">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0s6i5q4">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0qk4ngz">
+          <text>valid</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0hyggdk">
+        <inputEntry id="UnaryTests_06fh9lf">
+          <text>valid</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1v8y9zb">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0xy0cyi">
+          <text>amount("SendInvoice") == 1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0q5bw43">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0er279m">
+          <text>sent</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ho56q2">
+        <inputEntry id="UnaryTests_0bxea74">
+          <text>valid and sent</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0dkcixe">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0r4jz3s">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0vb9gsx">
+          <text>amount() == 1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0n52a32">
+          <text>paid</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
