@@ -10,10 +10,6 @@ class DMNGraph():
         self.dmnTables = dmn_tables
         self.graph = nx.DiGraph()
         self._addNodesAndEdges()
-        if (self.debugging):
-            print(list(self.graph))
-            # self.drawGraph()
-        
         
     def _addNodesAndEdges(self):   
         for table in self.dmnTables:

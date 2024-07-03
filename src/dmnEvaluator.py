@@ -242,6 +242,10 @@ class DMNEvaluator:
         return None
 
     def evaluate(self, object):
+        if (self.debugging):
+            print(f"Evaluating object: {object.id} from class: {object.clazz}")
+            print(object)
+
         dmnTable = self.getDMNTable(object)
         if (dmnTable is None):
             raise ValueError(
