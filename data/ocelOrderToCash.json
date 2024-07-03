@@ -1,20 +1,11 @@
 {
   "eventTypes": [
     {
-      "name": "ArchiveOrder",
+      "name": "RequestChanges",
       "attributes": []
     },
     {
       "name": "SendInvoice",
-      "attributes": [
-        {
-            "name": "dispatch",
-            "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "ProcessPayment",
       "attributes": []
     },
     {
@@ -30,7 +21,11 @@
       "attributes": []
     },
     {
-      "name": "RequestChanges",
+      "name": "ProcessPayment",
+      "attributes": []
+    },
+    {
+      "name": "ArchiveOrder",
       "attributes": []
     }
   ],
@@ -39,7 +34,7 @@
       "name": "order",
       "attributes": [
         {
-          "name": "TotalAmount",
+          "name": "Price",
           "type": "integer"
         },
         {
@@ -72,6 +67,36 @@
           "type": "date"
         }
       ]
+    },
+    {
+      "name": "product",
+      "attributes": [
+        {
+          "name": "Name",
+          "type": "string"
+        },
+        {
+          "name": "Price",
+          "type": "integer"
+        },
+        {
+          "name": "Quality",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "attributes": [
+        {
+          "name": "Amount",
+          "type": "integer"
+        },
+        {
+          "name": "ReceivedAt",
+          "type": "time"
+        }
+      ]
     }
   ],
   "events": [
@@ -79,12 +104,7 @@
       "id": "e1",
       "type": "SendInvoice",
       "time": "2024-01-01T12:34:56Z",
-      "attributes": [
-        {
-          "name": "dispatch",
-          "value": "1970-01-01"
-        }
-      ],
+      "attributes": [],
       "relationships": [
         {
           "objectId": "o1",
@@ -105,6 +125,10 @@
         {
           "objectId": "o1",
           "qualifier": "Manufacture Product of Order"
+        },
+        {
+          "objectId": "pro1",
+          "qualifier": "Product to Manufacture"
         }
       ]
     },
@@ -122,25 +146,29 @@
     },
     {
       "id": "e4",
-      "type": "ArchiveOrder",
+      "type": "ProcessPayment",
       "time": "2024-01-04T12:34:56Z",
       "attributes": [],
       "relationships": [
         {
           "objectId": "o1",
-          "qualifier": "Order to Archive"
+          "qualifier": "Process Payment of Order"
+        },
+        {
+          "objectId": "pay1",
+          "qualifier": "Payment for Order"
         }
       ]
     },
     {
       "id": "e5",
-      "type": "ArchiveOrder",
+      "type": "FulfillOrder",
       "time": "2024-01-05T12:34:56Z",
       "attributes": [],
       "relationships": [
         {
           "objectId": "o1",
-          "qualifier": "Order to Archive"
+          "qualifier": "Fulfill Order"
         }
       ]
     },
@@ -169,7 +197,7 @@
           "time":"2023-05-22T11:54:42.000Z"
         },
         {
-          "name": "TotalAmount",
+          "name": "Price",
           "value": "100",
           "time":"2023-05-22T11:54:42.000Z"
         },
@@ -209,6 +237,55 @@
         {
           "objectId": "o1",
           "qualifier": "invoice from order"
+        }
+      ]
+    },
+    {
+      "id": "pro1",
+      "type": "product",
+      "attributes": [
+        {
+          "name": "Name",
+          "value": "Product 1",
+          "time":"2023-05-22T11:54:42.000Z"
+        },
+        {
+          "name": "Price",
+          "value": "100",
+          "time":"2023-05-22T11:54:42.000Z"
+        },
+        {
+          "name": "Quality",
+          "value": "Good",
+          "time":"2023-05-22T11:54:42.000Z"
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "product from order"
+        }
+      ]
+    },
+    {
+      "id": "pay1",
+      "type": "payment",
+      "attributes": [
+        {
+          "name": "Amount",
+          "value": "100",
+          "time":"2023-05-22T11:54:42.000Z"
+        },
+        {
+          "name": "ReceivedAt",
+          "value": "2023-05-22T11:54:42.000Z",
+          "time":"2023-05-22T11:54:42.000Z"
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "i1",
+          "qualifier": "payment for invoice"
         }
       ]
     }
