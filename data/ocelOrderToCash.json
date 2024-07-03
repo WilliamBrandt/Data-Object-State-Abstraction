@@ -1,0 +1,216 @@
+{
+  "eventTypes": [
+    {
+      "name": "ArchiveOrder",
+      "attributes": []
+    },
+    {
+      "name": "SendInvoice",
+      "attributes": [
+        {
+            "name": "dispatch",
+            "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "ProcessPayment",
+      "attributes": []
+    },
+    {
+      "name": "FulfillOrder",
+      "attributes": []
+    },
+    {
+      "name": "ManufactureOrder",
+      "attributes": []
+    },
+    {
+      "name": "SendOrder",
+      "attributes": []
+    },
+    {
+      "name": "RequestChanges",
+      "attributes": []
+    }
+  ],
+  "objectTypes": [
+    {
+      "name": "order",
+      "attributes": [
+        {
+          "name": "TotalAmount",
+          "type": "integer"
+        },
+        {
+          "name": "Content",
+          "type": "string"
+        },
+        {
+          "name": "Confirmed",
+          "type": "boolean"
+        },
+        {
+          "name": "ReceivedAt",
+          "type": "time"
+        }
+      ]
+    },
+    {
+      "name": "invoice",
+      "attributes": [
+        {
+          "name": "Content",
+          "type": "string"
+        },
+        {
+          "name": "Last_Dispatch",
+          "type": "time"
+        },
+        {
+          "name": "ReceivedAt",
+          "type": "date"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "e1",
+      "type": "SendInvoice",
+      "time": "2024-01-01T12:34:56Z",
+      "attributes": [
+        {
+          "name": "dispatch",
+          "value": "1970-01-01"
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "Send Invoice of Order"
+        },
+        {
+          "objectId": "i1",
+          "qualifier": "Invoice to Send"
+        }
+      ]
+    },
+    {
+      "id": "e2",
+      "type": "ManufactureOrder",
+      "time": "2024-01-02T12:34:56Z",
+      "attributes": [],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "Manufacture Product of Order"
+        }
+      ]
+    },
+    {
+      "id": "e3",
+      "type": "SendOrder",
+      "time": "2024-01-03T12:34:56Z",
+      "attributes": [],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "Send Order"
+        }
+      ]
+    },
+    {
+      "id": "e4",
+      "type": "ArchiveOrder",
+      "time": "2024-01-04T12:34:56Z",
+      "attributes": [],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "Order to Archive"
+        }
+      ]
+    },
+    {
+      "id": "e5",
+      "type": "ArchiveOrder",
+      "time": "2024-01-05T12:34:56Z",
+      "attributes": [],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "Order to Archive"
+        }
+      ]
+    },
+    {
+      "id": "e6",
+      "type": "ArchiveOrder",
+      "time": "2024-01-06T12:34:56Z",
+      "attributes": [],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "Order to Archive"
+        }
+      ]
+    }
+
+  ],
+  "objects": [
+    {
+      "id": "o1",
+      "type": "order",
+      "attributes": [
+        {
+          "name": "Confirmed",
+          "value": "False",
+          "time":"2023-05-22T11:54:42.000Z"
+        },
+        {
+          "name": "TotalAmount",
+          "value": "100",
+          "time":"2023-05-22T11:54:42.000Z"
+        },
+        {
+          "name": "Content",
+          "value": "Order content",
+          "time":"2023-05-22T11:54:42.000Z"
+        },
+        {
+          "name": "ReceivedAt",
+          "value": "2023-05-22T11:54:42.000Z",
+          "time":"2023-05-22T11:54:42.000Z"
+        }
+      ]
+    },
+    {
+      "id": "i1",
+      "type": "invoice",
+      "attributes": [
+        {
+          "name": "Content",
+          "time": "2020-01-03",
+          "value": "Hey! I am the Invoice 3456"
+        },
+        {
+          "name": "Last_Dispatch",
+          "time": "2020-01-03",
+          "value": "1970-01-01"
+        },
+        {
+          "name": "ReceivedAt",
+          "time": "2020-01-03",
+          "value": "2020-01-03"
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "o1",
+          "qualifier": "invoice from order"
+        }
+      ]
+    }
+  ]
+}
