@@ -99,6 +99,7 @@ class TestDMNFunctions(unittest.TestCase):
     def test_extractStatesFromRelation(self):
         graph = self._getGraph()
         self.assertEqual(graph._extractStatesFromRelation("amount('C') == 1"), ['C'])
+        self.assertEqual(graph._extractStatesFromRelation("amount(\"C\") == 1"), ['C'])
         self.assertEqual(graph._extractStatesFromRelation("amount() == 1"), [])
 
         

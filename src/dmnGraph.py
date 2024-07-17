@@ -44,7 +44,11 @@ class DMNGraph():
         if relation is None:
             return []
 
-        pattern = r"amount\('([^']+)'\)"
+        replace = {"'": "", "\"" : ""}
+        for key in replace:
+            relation = relation.replace(key, replace[key])
+
+        pattern = r"amount\(([^']+)\)"
         match = re.search(pattern, relation)
         if match:
             return [match.group(1)]
@@ -61,8 +65,6 @@ class DMNGraph():
             return False
         
     def drawGraph(self):
-        pos=nx.spring_layout(self.graph)
-        # nx.draw(self.graph, with_labels=True, font_weight='bold')
-        # nx.draw_shell(self.graph,with_labels=True, font_weight='bold')
+        pos = nx.circular_layout(self.graph)
         nx.draw(self.graph,pos, with_labels=True, font_weight='bold')
         plt.show()
