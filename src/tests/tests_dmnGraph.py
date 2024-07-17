@@ -74,9 +74,9 @@ class TestDMNFunctions(unittest.TestCase):
         
     def test_relationCycle(self):
         # add rules 
-        self.orderDMN.add_rule([None,None,"inState('B)"])
+        self.orderDMN.add_rule([None,None,"amount('B') == 1"])
         self.orderDMN.add_state("A")
-        self.invoiceDMN.add_rule([None,None,"inState('A')"])
+        self.invoiceDMN.add_rule([None,None,"amount('A') == 1"])
         self.invoiceDMN.add_state("B")
         
         graph = self._getGraph()
@@ -84,18 +84,23 @@ class TestDMNFunctions(unittest.TestCase):
         
     def test_complexRelationCycle(self):
         # add rules 
-        self.orderDMN.add_rule([None,None,"inState('B)"])
+        self.orderDMN.add_rule([None,None,"amount('B') == 1"])
         self.orderDMN.add_state("A")
         self.orderDMN.add_rule(["A",None,None])
         self.orderDMN.add_state("D")
-        self.invoiceDMN.add_rule([None,None,"inState('D')"])
+        self.invoiceDMN.add_rule([None,None,"amount('D') == 1"])
         self.invoiceDMN.add_state("C")
         self.invoiceDMN.add_rule(["A or C",None,None])
         self.invoiceDMN.add_state("B")
         
         graph = self._getGraph()
         self.assertTrue(graph.isCyclic())
-        
+
+    def test_extractStatesFromRelation(self):
+        graph = self._getGraph()
+        self.assertEqual(graph._extractStatesFromRelation("amount('C') == 1"), ['C'])
+        self.assertEqual(graph._extractStatesFromRelation("amount() == 1"), [])
+
         
 if __name__ == '__main__':    
     unittest.main()

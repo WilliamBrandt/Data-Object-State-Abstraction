@@ -1,4 +1,5 @@
 import networkx as nx
+import re
 import matplotlib.pyplot as plt
 from dmnTable import DMNTable
 from dmnInputType import DMNInputType
@@ -33,7 +34,7 @@ class DMNGraph():
 
     def _extractStatesFromStateCondition(self, stateCondition):   
         if stateCondition is None:
-            return []  
+            return []
         replace = {"or": " ", "and": " ", "not": " ", "(": " ", ")": " "}
         for key in replace:
             stateCondition = stateCondition.replace(key, replace[key])
@@ -42,10 +43,12 @@ class DMNGraph():
     def _extractStatesFromRelation(self, relation):
         if relation is None:
             return []
-        replace = {"inState": " ","(": " ", ")": " ", "'": " ", "\"":" ","exists":" "}
-        for key in replace:
-            relation = relation.replace(key, replace[key])
-        return relation.split()
+
+        pattern = r"amount\('([^']+)'\)"
+        match = re.search(pattern, relation)
+        if match:
+            return [match.group(1)]
+        return []
 
     # Returns true if graph is cyclic else false
     def isCyclic(self):
