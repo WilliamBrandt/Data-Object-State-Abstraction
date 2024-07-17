@@ -40,7 +40,7 @@ class DMNRelationFunctions():
 
         objects = []
         for relatedObject in relatedObjects:
-            if state in self.evaluator.evaluate(relatedObject):
+            if state in self.evaluator.evaluate(relatedObject, "> "):
                 objects.append(relatedObject)
 
         return len(objects)
@@ -241,10 +241,10 @@ class DMNEvaluator:
                 return dmnTable
         return None
 
-    def evaluate(self, object):
+    def evaluate(self, object, debugging_prefix=""):
         if (self.debugging):
-            print(f"Evaluating object: {object.id} from class: {object.clazz}")
-            print(object)
+            print(f"\n{debugging_prefix}Evaluating object: {object.id} from class: {object.clazz}")
+            print(f"{debugging_prefix}{object}")
 
         dmnTable = self.getDMNTable(object)
         if (dmnTable is None):
@@ -254,6 +254,10 @@ class DMNEvaluator:
         possibleStates = []
         for j, rule in enumerate(dmnTable.rules):
             ruleFulfilled = True
+            if (self.debugging):
+                print(f"\n{debugging_prefix}Conditions for state: {dmnTable.states[j]}")
+                print(f"{debugging_prefix}Condition {j}: {rule}")
+
             for i, condition in enumerate(rule):
                 if (condition is None) or (condition == ""):
                     continue
@@ -262,11 +266,11 @@ class DMNEvaluator:
                     continue
                 expression = self._getExpression(object, input, condition)
                 if (self.debugging):
-                    print(f"Expression: {expression}")
+                    print(f"{debugging_prefix}Expression: {expression}")
                 ruleFulfilled = ruleFulfilled and eval(expression)
 
             if (self.debugging):
-                print(f"Rule {j} evaluated to: {ruleFulfilled}")
+                print(f"{debugging_prefix}Condition evaluated to: {ruleFulfilled}")
             if ruleFulfilled:
                 possibleStates.append(dmnTable.states[j])
 
@@ -285,5 +289,5 @@ class DMNEvaluator:
         else:
             validStates = possibleStates
         if (self.debugging):
-            print(f"Object: {object.id} from class: {object.clazz} has states:{validStates}")
+            print(f"\n{debugging_prefix}Object: {object.id} from class: {object.clazz} has states:{validStates}")
         return validStates
