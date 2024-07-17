@@ -115,60 +115,7 @@
           "qualifier": "Product to Manufacture"
         }
       ]
-    },
-    {
-      "id": "e3",
-      "type": "SendOrder",
-      "time": "2024-01-03T12:34:56Z",
-      "attributes": [],
-      "relationships": [
-        {
-          "objectId": "o1",
-          "qualifier": "Send Order"
-        }
-      ]
-    },
-    {
-      "id": "e4",
-      "type": "ProcessPayment",
-      "time": "2024-01-04T12:34:56Z",
-      "attributes": [],
-      "relationships": [
-        {
-          "objectId": "o1",
-          "qualifier": "Process Payment of Order"
-        },
-        {
-          "objectId": "pay1",
-          "qualifier": "Payment for Order"
-        }
-      ]
-    },
-    {
-      "id": "e5",
-      "type": "FulfillOrder",
-      "time": "2024-01-05T12:34:56Z",
-      "attributes": [],
-      "relationships": [
-        {
-          "objectId": "o1",
-          "qualifier": "Fulfill Order"
-        }
-      ]
-    },
-    {
-      "id": "e6",
-      "type": "ArchiveOrder",
-      "time": "2024-01-06T12:34:56Z",
-      "attributes": [],
-      "relationships": [
-        {
-          "objectId": "o1",
-          "qualifier": "Order to Archive"
-        }
-      ]
     }
-
   ],
   "objects": [
     {
@@ -182,7 +129,7 @@
         },
         {
           "name": "price",
-          "value": "500",
+          "value": "100",
           "time":"2023-05-22T11:54:42.000Z"
         }
       ]
@@ -215,7 +162,7 @@
         },
         {
           "name": "price",
-          "value": "500",
+          "value": "100",
           "time":"2023-05-22T11:54:42.000Z"
         },
         {
@@ -228,28 +175,6 @@
         {
           "objectId": "o1",
           "qualifier": "product from order"
-        }
-      ]
-    },
-    {
-      "id": "pay1",
-      "type": "payment",
-      "attributes": [
-        {
-          "name": "amount",
-          "value": "500",
-          "time":"2023-05-22T11:54:42.000Z"
-        },
-        {
-          "name": "receivedAt",
-          "value": "2023-05-22T11:54:42.000Z",
-          "time":"2023-05-22T11:54:42.000Z"
-        }
-      ],
-      "relationships": [
-        {
-          "objectId": "i1",
-          "qualifier": "payment for invoice"
         }
       ]
     }
