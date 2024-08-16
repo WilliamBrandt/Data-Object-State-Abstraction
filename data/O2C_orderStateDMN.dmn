@@ -7,12 +7,12 @@
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_0wjzh6r" label="object.id">
+      <input id="InputClause_0wjzh6r" label="attribute.id">
         <inputExpression id="LiteralExpression_07u5gw0" typeRef="string">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_0fwqhkb" label="object.price">
+      <input id="InputClause_0fwqhkb" label="attribute.price">
         <inputExpression id="LiteralExpression_0f2vpk4" typeRef="string">
           <text></text>
         </inputExpression>
@@ -53,7 +53,7 @@
           <text></text>
         </inputEntry>
         <outputEntry id="LiteralExpression_07isf3n">
-          <text>not valid</text>
+          <text>invalid</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_0x8ekeu">

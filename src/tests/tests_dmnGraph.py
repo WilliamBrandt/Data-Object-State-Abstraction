@@ -19,13 +19,13 @@ class TestDMNFunctions(unittest.TestCase):
 
     def setUp(self):
         input0 = DMNInput("state",DMNInputType.state)
-        input1 = DMNInput("id",DMNInputType.object)
+        input1 = DMNInput("id", DMNInputType.attribute)
         input2 = DMNInput("invoice",DMNInputType.relation)
         
         self.orderDMN = DMNTable("order", [input0, input1, input2])
         
         input0 = DMNInput("state",DMNInputType.state)
-        input1 = DMNInput("id",DMNInputType.object)
+        input1 = DMNInput("id", DMNInputType.attribute)
         input2 = DMNInput("order",DMNInputType.relation)
         
         self.invoiceDMN = DMNTable("invoice", [input0, input1,input2])

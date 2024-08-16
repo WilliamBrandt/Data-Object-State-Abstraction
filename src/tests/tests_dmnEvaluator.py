@@ -24,15 +24,15 @@ class TestDMNFunctions(unittest.TestCase):
         self.invoice = GenericObject(clazz="invoice", id=invoiceId, receiveDate=None, history=[], related_objects={"order": [orderId]})
         self.objects = [self.order, self.invoice]
         
-        input0 = DMNInput("id",DMNInputType.object)
-        input1 = DMNInput("totalamount",DMNInputType.object)
+        input0 = DMNInput("id", DMNInputType.attribute)
+        input1 = DMNInput("totalamount", DMNInputType.attribute)
         input2 = DMNInput("invoice",DMNInputType.relation)
         input3 = DMNInput("history",DMNInputType.history)
         
         self.orderDMN = DMNTable("order", [input0, input1, input2, input3])
 
-        input0 = DMNInput("id",DMNInputType.object)
-        input1 = DMNInput("receiveDate",DMNInputType.object)
+        input0 = DMNInput("id", DMNInputType.attribute)
+        input1 = DMNInput("receiveDate", DMNInputType.attribute)
         input2 = DMNInput("history",DMNInputType.history)
         
         self.invoiceDMN = DMNTable("invoice", [input0, input1, input2])
@@ -189,7 +189,7 @@ class TestDMNFunctions(unittest.TestCase):
         self.assertIn("paymentSentOrAbort",states)
 
     def test_extractOperatorAndValue(self):
-        input = DMNInput("totalamount",DMNInputType.object)
+        input = DMNInput("totalamount", DMNInputType.attribute)
         
         self.order.totalamount = 150
         condition = "100"

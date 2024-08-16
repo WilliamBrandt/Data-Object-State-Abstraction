@@ -7,7 +7,7 @@
           <text></text>
         </inputExpression>
       </input>
-      <input id="input1" label="object.id">
+      <input id="input1" label="attribute.id">
         <inputExpression id="inputExpression1" typeRef="string">
           <text></text>
         </inputExpression>

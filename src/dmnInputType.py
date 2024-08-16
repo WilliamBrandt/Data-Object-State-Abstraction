@@ -2,6 +2,6 @@ from enum import Enum
 
 class DMNInputType(Enum):
     state = "state"
-    object = "object"
+    attribute = "attribute"
     relation = "relation"
     history = "history"
