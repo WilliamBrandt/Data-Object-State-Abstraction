@@ -20,6 +20,7 @@ objects = ocel.get_objects_with_history_and_foreign_key()
 
 # Initialize evaluator and test for cyclic state dependencies
 evaluator = DMNEvaluator(dmnTables, objects, debugging=True)
+evaluator.visualizeGraph()
 
 # Evaluate object
 order = objects[0]
