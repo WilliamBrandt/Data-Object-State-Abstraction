@@ -1,6 +1,20 @@
-# A Unified View on Data Object States - Prototypical Implementation
+# A Unified View on Data Object State - Prototypical Implementation
 
 This repository contains the prototypical implementation of the data object state concept introduced in our paper, *"A Unified View on Data Object States."* This work bridges the gap between process control flow and data management by formalizing and generalizing the definition of data object states in business process models.
+
+## Table of Contents
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Execution Flow in main.py](#execution-flow-in-mainpy)
+- [Limitations and Syntactic Sugar](#limitations-and-syntactic-sugar)
+- [Example Output](#example-output)
+- [Extension of the Demo Case](#extension-of-the-demo-case)
+  - [1. Extending the DMN Table](#1-extending-the-dmn-table)
+  - [2. Extending the Log, Object Classes, and Objects](#2-extending-the-log-object-classes-and-objects)
+  - [3. Extending the Evaluation of Data Object States](#3-extending-the-evaluation-of-data-object-states)
 
 
 ## Getting Started
