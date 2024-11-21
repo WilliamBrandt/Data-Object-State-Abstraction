@@ -26,8 +26,8 @@ class DMNGraph():
                             nextNode = clazz + "." + referedState
                             self.graph.add_edge(currentNode, nextNode)  
                         
-                    if input.type == DMNInputType.relation:
-                        referedStates = self._extractStatesFromRelation(table.rules[i][j])
+                    if input.type == DMNInputType.link:
+                        referedStates = self._extractStatesFromLink(table.rules[i][j])
                         for referedState in referedStates:
                             nextNode =  input.label + "." + referedState
                             self.graph.add_edge(currentNode, nextNode)
@@ -40,16 +40,16 @@ class DMNGraph():
             stateCondition = stateCondition.replace(key, replace[key])
         return stateCondition.split()
     
-    def _extractStatesFromRelation(self, relation):
-        if relation is None:
+    def _extractStatesFromLink(self, link):
+        if link is None:
             return []
 
         replace = {"'": "", "\"" : ""}
         for key in replace:
-            relation = relation.replace(key, replace[key])
+            link = link.replace(key, replace[key])
 
         pattern = r"amount\(([^']+)\)"
-        match = re.search(pattern, relation)
+        match = re.search(pattern, link)
         if match:
             return [match.group(1)]
         return []

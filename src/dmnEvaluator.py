@@ -8,7 +8,7 @@ class DMNHistoryFunctions():
         return log.count(event)
 
 
-class DMNRelationFunctions():
+class DMNLinkFunctions():
     def __init__(self, evaluator, objects):
         self.evaluator = evaluator
         self.objects = objects
@@ -74,8 +74,8 @@ class DMNEvaluator:
 
         self.debugging = debugging
         self.dmnTables = dmn_tables
-        self.functions_history = DMNHistoryFunctions()
-        self.functions_relation = DMNRelationFunctions(self, objects)
+        self.functions_events = DMNHistoryFunctions()
+        self.functions_link = DMNLinkFunctions(self, objects)
 
         self.graph = DMNGraph(dmn_tables, debugging)
 
@@ -187,7 +187,7 @@ class DMNEvaluator:
             expression += self._evaluateExpression(object, input, term, fragment[0], fragment[1:])
         return expression
 
-    def _evaluateRelationFunctionTerm(self, object, input: DMNInput, innerTerm):
+    def _evaluateLinkFunctionTerm(self, object, input: DMNInput, innerTerm):
         # if input.label in object.related_objects:
         id = object.id
         clazz = input.label
@@ -201,15 +201,15 @@ class DMNEvaluator:
 
     def _evaluateInnerFunctionTerm(self, object, input, innerTerm):
         if (innerTerm == "" or innerTerm is None):
-            if input.type == DMNInputType.relation:
-                innerTerm = self._evaluateRelationFunctionTerm(object, input, innerTerm)
+            if input.type == DMNInputType.link:
+                innerTerm = self._evaluateLinkFunctionTerm(object, input, innerTerm)
             else:
                 innerTerm = self._getObjectValue(object, input)
         else:
             fragment = self.smart_split(innerTerm)
             if (len(fragment) == 1 and self._isValue(innerTerm)):
-                if input.type == DMNInputType.relation:
-                    innerTerm = self._evaluateRelationFunctionTerm(object, input, innerTerm)
+                if input.type == DMNInputType.link:
+                    innerTerm = self._evaluateLinkFunctionTerm(object, input, innerTerm)
                 else:
                     innerTerm = str(self._getObjectValue(object, input)) + "," + innerTerm
             else:

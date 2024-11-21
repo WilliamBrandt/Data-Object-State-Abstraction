@@ -26,7 +26,7 @@ class TestDMNFunctions(unittest.TestCase):
         
         input0 = DMNInput("id", DMNInputType.attribute)
         input1 = DMNInput("totalamount", DMNInputType.attribute)
-        input2 = DMNInput("invoice",DMNInputType.relation)
+        input2 = DMNInput("invoice", DMNInputType.link)
         input3 = DMNInput("history",DMNInputType.history)
         
         self.orderDMN = DMNTable("order", [input0, input1, input2, input3])
@@ -84,7 +84,7 @@ class TestDMNFunctions(unittest.TestCase):
         self.assertIn("createInvoice",states)
         self.assertIn("archiveOrder",states)
 
-    def test_relationFunctionAmount(self):
+    def test_linkFunctionAmount(self):
         # add rules
         self.orderDMN.add_rule([None,None,"amount() > 0 ",None])
         self.orderDMN.add_state("invoicePresent")
@@ -97,7 +97,7 @@ class TestDMNFunctions(unittest.TestCase):
         states = self.evaluator.evaluate(self.order)
         self.assertIn("invoicePresent",states)
 
-    def test_relationFunctionAmountWithState(self):
+    def test_linkFunctionAmountWithState(self):
         #add rules
         self.orderDMN.add_rule([None,None,"amount('sent') > 0",None])
         self.orderDMN.add_state("invoiceSent")
@@ -112,7 +112,7 @@ class TestDMNFunctions(unittest.TestCase):
         states = self.evaluator.evaluate(self.order)
         self.assertIn("invoiceSent",states)
 
-    def test_relationFunctions(self):
+    def test_linkFunctions(self):
         # add rules
         self.invoiceDMN.add_rule([None,"== None",None])
         self.invoiceDMN.add_state("unpaid")
@@ -133,7 +133,7 @@ class TestDMNFunctions(unittest.TestCase):
         self.assertIn("paid",states)
         self.assertNotIn("unpaid",states)
         
-    def test_relationFunction_exists(self):
+    def test_linkFunction_exists(self):
         # add rules
         self.orderDMN.add_rule([None,None,"amount() == 1",None])
         self.orderDMN.add_state("invoiced")
@@ -204,19 +204,19 @@ class TestDMNFunctions(unittest.TestCase):
         expression = self.evaluator._getExpression(self.order, input, condition)
         self.assertEqual(expression, f"150 < 100 or 150 < 200")
         
-        input = DMNInput("invoice",DMNInputType.relation)
+        input = DMNInput("invoice", DMNInputType.link)
         
         condition = "amount()"
         expression = self.evaluator._getExpression(self.order, input, condition)
-        self.assertEqual(expression, f"self.functions_relation.amount(\'{self.order.id}\',\'invoice\')")
+        self.assertEqual(expression, f"self.functions_link.amount(\'{self.order.id}\',\'invoice\')")
         
         condition = "amount(\'sent\') == 1 or amount(\'paid\') == 1"
         expression = self.evaluator._getExpression(self.order, input, condition)
-        self.assertEqual(expression, f"self.functions_relation.amount(\'{self.order.id}\',\'invoice\',\'sent\') == 1 or self.functions_relation.amount(\'{self.order.id}\',\'invoice\',\'paid\') == 1")
+        self.assertEqual(expression, f"self.functions_link.amount(\'{self.order.id}\',\'invoice\',\'sent\') == 1 or self.functions_link.amount(\'{self.order.id}\',\'invoice\',\'paid\') == 1")
 
         condition = "amount() == 0"
         expression = self.evaluator._getExpression(self.order, input, condition)
-        self.assertEqual(expression, f"self.functions_relation.amount(\'{self.order.id}\',\'invoice\') == 0")
+        self.assertEqual(expression, f"self.functions_link.amount(\'{self.order.id}\',\'invoice\') == 0")
         
         
     def test_evaluationOfComplexConditions(self):

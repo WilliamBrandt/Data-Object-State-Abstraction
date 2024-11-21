@@ -19,8 +19,8 @@ class DMNParser:
             return DMNInputType.state, input
         elif input.startswith(DMNInputType.attribute.value + "."):
             return DMNInputType.attribute, input.replace(DMNInputType.attribute.value + ".", "")
-        elif input.startswith(DMNInputType.relation.value):
-            return DMNInputType.relation, input.replace(DMNInputType.relation.value+".", "")
+        elif input.startswith(DMNInputType.link.value):
+            return DMNInputType.link, input.replace(DMNInputType.link.value + ".", "")
         elif input == DMNInputType.history.value:
             return DMNInputType.history, input
         else:

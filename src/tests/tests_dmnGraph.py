@@ -20,13 +20,13 @@ class TestDMNFunctions(unittest.TestCase):
     def setUp(self):
         input0 = DMNInput("state",DMNInputType.state)
         input1 = DMNInput("id", DMNInputType.attribute)
-        input2 = DMNInput("invoice",DMNInputType.relation)
+        input2 = DMNInput("invoice", DMNInputType.link)
         
         self.orderDMN = DMNTable("order", [input0, input1, input2])
         
         input0 = DMNInput("state",DMNInputType.state)
         input1 = DMNInput("id", DMNInputType.attribute)
-        input2 = DMNInput("order",DMNInputType.relation)
+        input2 = DMNInput("order", DMNInputType.link)
         
         self.invoiceDMN = DMNTable("invoice", [input0, input1,input2])
     
@@ -72,7 +72,7 @@ class TestDMNFunctions(unittest.TestCase):
         self.assertEqual(graph._extractStatesFromStateCondition("A or B"), ["A", "B"])
         self.assertEqual(graph._extractStatesFromStateCondition("A and not(B)"), ["A", "B"])
         
-    def test_relationCycle(self):
+    def test_linkCycle(self):
         # add rules 
         self.orderDMN.add_rule([None,None,"amount('B') == 1"])
         self.orderDMN.add_state("A")
@@ -82,7 +82,7 @@ class TestDMNFunctions(unittest.TestCase):
         graph = self._getGraph()
         self.assertTrue(graph.isCyclic())
         
-    def test_complexRelationCycle(self):
+    def test_complexLinkCycle(self):
         # add rules 
         self.orderDMN.add_rule([None,None,"amount('B') == 1"])
         self.orderDMN.add_state("A")
@@ -96,11 +96,11 @@ class TestDMNFunctions(unittest.TestCase):
         graph = self._getGraph()
         self.assertTrue(graph.isCyclic())
 
-    def test_extractStatesFromRelation(self):
+    def test_extractStatesFromLink(self):
         graph = self._getGraph()
-        self.assertEqual(graph._extractStatesFromRelation("amount('C') == 1"), ['C'])
-        self.assertEqual(graph._extractStatesFromRelation("amount(\"C\") == 1"), ['C'])
-        self.assertEqual(graph._extractStatesFromRelation("amount() == 1"), [])
+        self.assertEqual(graph._extractStatesFromLink("amount('C') == 1"), ['C'])
+        self.assertEqual(graph._extractStatesFromLink("amount(\"C\") == 1"), ['C'])
+        self.assertEqual(graph._extractStatesFromLink("amount() == 1"), [])
 
         
 if __name__ == '__main__':    
