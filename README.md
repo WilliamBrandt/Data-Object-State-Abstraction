@@ -99,3 +99,48 @@ The system detects `Ord1` as being in the `valid`, `paid` and `ready` states.
 
 **Adding an DeliverOrder Event:**
 After appending an `deliverOrder` event linked to `Ord1` (by using the extended event log `O2C_event_log_with_DeliverOrder.json`) and reevaluating, the system places `Ord1`  in the `valid`, `paid`, and `sent` states.
+
+
+## Extension of the Demo Case
+
+Want to customize the demo case? Fantastic! There are three levels of extension available to you, ranging in complexity:
+
+### 1. Extending the DMN Table
+
+You can add or modify states using the online editor at [demo.bpmn.io/dmn](https://demo.bpmn.io/dmn). To get started:
+
+- Import an existing DMN table from the `data/` folder and adapt it to your needs.
+- Use the semantics from the provided examples as a guide, which cover many possible scenarios.
+
+#### Column Naming Conventions:
+- **Attributes**: `attribute.[attribute name]`
+- **Links**: `links.[object class]`
+- **Events**: `events`
+- **Nested States**: Use the column `state` to construct nested state definitions.
+
+If you're adding a new DMN table for a different object class, ensure that:
+1. The table name matches the class name.
+2. The table is properly imported in `main.py`.
+
+Additionally, if you reference new attributes, objects, or events, remember to extend the OCEL log accordingly to reflect these changes.
+
+### 2. Extending the Log, Object Classes, and Objects
+
+To update or expand the OCEL log:
+
+- Modify or add entries for event types, object types, events, and objects.
+- Use the structure of the existing log as a guide.
+
+For visualization, the website [ocelot.pm](https://ocelot.pm/) provides tools to view OCEL logs interactively. When reading the log, the system verifies its adherence to the OCEL standard. If the log fails validation, the process halts with an error message explaining the issue.
+
+### 3. Extending the Evaluation of Data Object States
+
+To extend the evaluation logic:
+
+- Modify the `DMNEvaluator` class in the `src/` folder.
+- Consider using test-driven development (TDD) to avoid introducing side effects.
+
+For guidance, refer to the existing unit tests in `test_dmnEvaluator.py`. These tests provide templates that can be adapted for your new evaluation logic.
+
+
+Happy extending!
