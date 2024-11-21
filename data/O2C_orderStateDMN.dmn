@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions_17g2i2l" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="16.4.0">
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions_17g2i2l" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="17.0.0">
   <decision id="decision_0c62b6h" name="order">
     <decisionTable id="decisionTable_0fna2u8" hitPolicy="COLLECT">
       <input id="input1" label="state" biodi:width="192">
@@ -17,17 +17,17 @@
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1j21pul" label="relation.invoice">
+      <input id="InputClause_1j21pul" label="link.invoice">
         <inputExpression id="LiteralExpression_1rtcvv9" typeRef="Any">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1i2ge2o" label="relation.product">
+      <input id="InputClause_1i2ge2o" label="link.product">
         <inputExpression id="LiteralExpression_0f5u1ln" typeRef="Any">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_0xxvp2s" label="history">
+      <input id="InputClause_0xxvp2s" label="events">
         <inputExpression id="LiteralExpression_139g0i3" typeRef="Any">
           <text></text>
         </inputExpression>
@@ -139,7 +139,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_1wbl5ep">
-          <text>amount() == 1</text>
+          <text>amount() &gt;= 1</text>
         </inputEntry>
         <inputEntry id="UnaryTests_02xm6c7">
           <text></text>
@@ -165,7 +165,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_00z1qv5">
-          <text>amount("SendOrder") == 1</text>
+          <text>amount("DeliverOrder") == 1</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1yv6erq">
           <text>sent</text>

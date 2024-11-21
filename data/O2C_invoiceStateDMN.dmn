@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions_1e2stvb" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="16.4.0">
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions_1e2stvb" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="17.0.0">
   <decision id="decision_0a93vpn" name="invoice">
     <decisionTable id="decisionTable_0m3vbq4" hitPolicy="COLLECT">
       <input id="InputClause_13pby60" label="state" biodi:width="192">
@@ -12,12 +12,12 @@
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_0mirflu" label="history" biodi:width="192">
+      <input id="InputClause_0mirflu" label="events" biodi:width="192">
         <inputExpression id="LiteralExpression_156885m" typeRef="Any">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_17pgjn5" label="relation.payment">
+      <input id="InputClause_17pgjn5" label="link.payment">
         <inputExpression id="LiteralExpression_1gjcwmi" typeRef="Any">
           <text></text>
         </inputExpression>

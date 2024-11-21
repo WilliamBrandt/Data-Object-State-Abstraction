@@ -1,10 +1,6 @@
 {
   "eventTypes": [
     {
-      "name": "RequestChanges",
-      "attributes": []
-    },
-    {
       "name": "SendInvoice",
       "attributes": []
     },
@@ -13,11 +9,11 @@
       "attributes": []
     },
     {
-      "name": "ManufactureOrder",
+      "name": "ManufactureProducts",
       "attributes": []
     },
     {
-      "name": "SendOrder",
+      "name": "DeliverOrder",
       "attributes": []
     },
     {
@@ -38,7 +34,7 @@
           "type": "integer"
         },
         {
-          "name": "confirmed",
+          "name": "DeliveryDate",
           "type": "boolean"
         }
       ]
@@ -47,7 +43,7 @@
       "name": "invoice",
       "attributes": [
         {
-          "name": "content",
+          "name": "DueBy",
           "type": "string"
         }
       ]
@@ -58,10 +54,6 @@
         {
           "name": "name",
           "type": "string"
-        },
-        {
-          "name": "price",
-          "type": "integer"
         },
         {
           "name": "quality",
@@ -87,57 +79,45 @@
     {
       "id": "e1",
       "type": "SendInvoice",
-      "time": "2024-01-01T12:34:56Z",
+      "time": "2024-09-17T05:00:00Z",
       "attributes": [],
       "relationships": [
         {
-          "objectId": "o1",
+          "objectId": "Ord1",
           "qualifier": "Send Invoice of Order"
         },
         {
-          "objectId": "i1",
+          "objectId": "Inv1",
           "qualifier": "Invoice to Send"
         }
       ]
     },
     {
       "id": "e2",
-      "type": "ManufactureOrder",
-      "time": "2024-01-02T12:34:56Z",
+      "type": "ManufactureProducts",
+      "time": "2024-09-18T09:00:00Z",
       "attributes": [],
       "relationships": [
         {
-          "objectId": "o1",
+          "objectId": "Ord1",
           "qualifier": "Manufacture Product of Order"
         },
         {
-          "objectId": "pro1",
+          "objectId": "Pro1",
           "qualifier": "Product to Manufacture"
-        }
-      ]
-    },
-    {
-      "id": "e3",
-      "type": "SendOrder",
-      "time": "2024-01-03T12:34:56Z",
-      "attributes": [],
-      "relationships": [
-        {
-          "objectId": "o1",
-          "qualifier": "Send Order"
         }
       ]
     }
   ],
   "objects": [
     {
-      "id": "o1",
+      "id": "Ord1",
       "type": "order",
       "attributes": [
         {
-          "name": "confirmed",
-          "value": "True",
-          "time":"2023-05-22T11:54:42.000Z"
+          "name": "DeliveryDate",
+          "value": "2024-09-18T10:54:42.000Z",
+          "time":"2024-09-18T10:54:42.000Z"
         },
         {
           "name": "price",
@@ -147,34 +127,29 @@
       ]
     },
     {
-      "id": "i1",
+      "id": "Inv1",
       "type": "invoice",
       "attributes": [
         {
-          "name": "content",
+          "name": "DueBy",
           "time": "2020-01-03",
-          "value": "Hey! I am the Invoice 3456"
+          "value": "2023-05-22T11:54:42.000Z"
         }
       ],
       "relationships": [
         {
-          "objectId": "o1",
+          "objectId": "Ord1",
           "qualifier": "invoice from order"
         }
       ]
     },
     {
-      "id": "pro1",
+      "id": "Pro1",
       "type": "product",
       "attributes": [
         {
           "name": "name",
-          "value": "Product 1",
-          "time":"2023-05-22T11:54:42.000Z"
-        },
-        {
-          "name": "price",
-          "value": "100",
+          "value": "Product A",
           "time":"2023-05-22T11:54:42.000Z"
         },
         {
@@ -185,18 +160,40 @@
       ],
       "relationships": [
         {
-          "objectId": "o1",
+          "objectId": "Ord1",
           "qualifier": "product from order"
         }
       ]
     },
     {
-      "id": "pay1",
+      "id": "Pro2",
+      "type": "product",
+      "attributes": [
+        {
+          "name": "name",
+          "value": "Product B",
+          "time":"2023-05-22T11:54:42.000Z"
+        },
+        {
+          "name": "quality",
+          "value": "Medium",
+          "time":"2023-05-22T11:54:42.000Z"
+        }
+      ],
+      "relationships": [
+        {
+          "objectId": "Ord1",
+          "qualifier": "product from order"
+        }
+      ]
+    },
+    {
+      "id": "Pay1",
       "type": "payment",
       "attributes": [
         {
           "name": "amount",
-          "value": "100",
+          "value": "150",
           "time":"2023-05-22T11:54:42.000Z"
         },
         {
@@ -207,7 +204,7 @@
       ],
       "relationships": [
         {
-          "objectId": "i1",
+          "objectId": "Inv1",
           "qualifier": "payment for invoice"
         }
       ]
