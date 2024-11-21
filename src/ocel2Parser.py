@@ -127,15 +127,15 @@ class OCEL:
                 for rel_obj in obj['relationships']:
                     self.add_object_object(obj['id'], rel_obj['objectId'], rel_obj["qualifier"])
 
-    def get_history_for_object(self, object_id):
-        history = []
-        history_names = {}
+    def get_events_for_object(self, object_id):
+        events = []
+        events_names = {}
         for event_obj in self.event_objects:
             if object_id == event_obj["ocel_object_id"]:
-                history.append(event_obj["ocel_event_id"])
-        for event in history:
-            history_names[event] = (self.events[event]["type"])
-        return history_names
+                events.append(event_obj["ocel_event_id"])
+        for event in events:
+            events_names[event] = (self.events[event]["type"])
+        return events_names
 
     def get_related_objects(self, object_id):
         related_objects = {}
@@ -148,7 +148,7 @@ class OCEL:
                 related_objects.setdefault(object_type, []).append(obj_obj["ocel_source_id"])
         return related_objects
 
-    def get_objects_with_history_and_foreign_key(self):
+    def get_objects_with_events_and_foreign_key(self):
         objects = []
         for obj_id, obj in self.objects.items():
             current_object = GenericObject(clazz=obj['type'], id=obj_id)
@@ -157,17 +157,9 @@ class OCEL:
             for attribute in attributes:
                 current_object.__dict__[attribute['name']] = attribute['value']
 
-            current_object.history = self.get_history_for_object(obj_id)
+            current_object.events = self.get_events_for_object(obj_id)
             # add related objects as attribute
             current_object.related_objects = self.get_related_objects(obj_id)
             # current_object.related_objects = related_objects
             objects.append(current_object)
         return objects
-
-#ocel = OCEL()
-#ocel.parse_and_store('../data/ocelExample.json')
-#print(ocel.get_object_objects())
-#print(ocel.get_related_objects('o1'))
-#print(ocel.get_objects_with_history_and_foreign_key())
-#for obj in ocel.get_objects_with_history_and_foreign_key():
-#     print(obj.__str__())

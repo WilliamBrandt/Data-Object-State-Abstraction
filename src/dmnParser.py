@@ -21,8 +21,8 @@ class DMNParser:
             return DMNInputType.attribute, input.replace(DMNInputType.attribute.value + ".", "")
         elif input.startswith(DMNInputType.link.value):
             return DMNInputType.link, input.replace(DMNInputType.link.value + ".", "")
-        elif input == DMNInputType.history.value:
-            return DMNInputType.history, input
+        elif input == DMNInputType.events.value:
+            return DMNInputType.events, input
         else:
             raise ValueError(f"Field not recognized. Field: {input}")
     

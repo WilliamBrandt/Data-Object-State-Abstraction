@@ -16,7 +16,7 @@ dmnTables = [orderDMN[0], invoiceDMN[0]] # '[0]' is necessary because the parser
 # Extract objects from OCEL
 ocel = OCEL()
 ocel.parse_and_store(ocelPath)
-objects = ocel.get_objects_with_history_and_foreign_key()
+objects = ocel.get_objects_with_events_and_foreign_key()
 
 # Initialize evaluator and test for cyclic state dependencies
 evaluator = DMNEvaluator(dmnTables, objects, debugging=True)

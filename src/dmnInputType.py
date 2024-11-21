@@ -4,4 +4,4 @@ class DMNInputType(Enum):
     state = "state"
     attribute = "attribute"
     link = "link"
-    history = "history"
+    events = "events"

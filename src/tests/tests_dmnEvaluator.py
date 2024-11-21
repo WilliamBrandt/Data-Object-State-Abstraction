@@ -20,20 +20,20 @@ class TestDMNFunctions(unittest.TestCase):
     def setUp(self):
         invoiceId = "a-bb1s2345678"
         orderId = "a-bb876s54321"
-        self.order = GenericObject(clazz="order", id=orderId,totalamount=150, history=[], related_objects={"invoice": [invoiceId]})
-        self.invoice = GenericObject(clazz="invoice", id=invoiceId, receiveDate=None, history=[], related_objects={"order": [orderId]})
+        self.order = GenericObject(clazz="order", id=orderId,totalamount=150, events=[], related_objects={"invoice": [invoiceId]})
+        self.invoice = GenericObject(clazz="invoice", id=invoiceId, receiveDate=None, events=[], related_objects={"order": [orderId]})
         self.objects = [self.order, self.invoice]
         
         input0 = DMNInput("id", DMNInputType.attribute)
         input1 = DMNInput("totalamount", DMNInputType.attribute)
         input2 = DMNInput("invoice", DMNInputType.link)
-        input3 = DMNInput("history",DMNInputType.history)
+        input3 = DMNInput("events",DMNInputType.events)
         
         self.orderDMN = DMNTable("order", [input0, input1, input2, input3])
 
         input0 = DMNInput("id", DMNInputType.attribute)
         input1 = DMNInput("receiveDate", DMNInputType.attribute)
-        input2 = DMNInput("history",DMNInputType.history)
+        input2 = DMNInput("events",DMNInputType.events)
         
         self.invoiceDMN = DMNTable("invoice", [input0, input1, input2])
         
@@ -64,7 +64,7 @@ class TestDMNFunctions(unittest.TestCase):
         self.assertNotIn("gr1000",states)
         self.assertIn("NotNone",states)
     
-    def test_historyFunctions(self):
+    def test_eventsFunctions(self):
         # add rules
         self.orderDMN.add_rule([None,None,None,"amount('CreateInvoice') == 1"])
         self.orderDMN.add_state("createInvoice")
@@ -75,11 +75,11 @@ class TestDMNFunctions(unittest.TestCase):
         states = self.evaluator.evaluate(self.order)
         self.assertNotIn("createInvoice",states)
         self.assertNotIn("archiveOrder",states)
-        self.order.history = ["CreateInvoice", "ArchiveOrder"]
+        self.order.events = ["CreateInvoice", "ArchiveOrder"]
         states = self.evaluator.evaluate(self.order)
         self.assertIn("createInvoice",states)
         self.assertNotIn("archiveOrder",states)
-        self.order.history = ["CreateInvoice", "ArchiveOrder", "ArchiveOrder"]
+        self.order.events = ["CreateInvoice", "ArchiveOrder", "ArchiveOrder"]
         states = self.evaluator.evaluate(self.order)
         self.assertIn("createInvoice",states)
         self.assertIn("archiveOrder",states)
@@ -105,10 +105,10 @@ class TestDMNFunctions(unittest.TestCase):
         self.invoiceDMN.add_state("sent")
 
         #test rules
-        self.invoice.history = []
+        self.invoice.events = []
         states = self.evaluator.evaluate(self.order)
         self.assertNotIn("invoiceSent",states)
-        self.invoice.history = ["SentInvoice"]
+        self.invoice.events = ["SentInvoice"]
         states = self.evaluator.evaluate(self.order)
         self.assertIn("invoiceSent",states)
 
@@ -156,11 +156,11 @@ class TestDMNFunctions(unittest.TestCase):
         self.orderDMN.add_state("invoiced")
         
         # test rules
-        self.invoice.history = []
+        self.invoice.events = []
         states = self.evaluator.evaluate(self.order)
         self.assertNotIn("invoiced",states)
         
-        self.invoice.history = ["SentInvoice"]
+        self.invoice.events = ["SentInvoice"]
         states = self.evaluator.evaluate(self.order)
         self.assertIn("invoiced",states)
         
@@ -173,18 +173,18 @@ class TestDMNFunctions(unittest.TestCase):
         
         # test rules
         self.order.totalamount = 150
-        self.order.history = []
+        self.order.events = []
         states = self.evaluator.evaluate(self.order)
         self.assertIn("between100and200",states)
         self.assertNotIn("paymentSentOrAbort",states)
         
-        self.order.history = ["SentPayment"]
+        self.order.events = ["SentPayment"]
         self.order.totalamount = 50
         states = self.evaluator.evaluate(self.order)
         self.assertNotIn("between100and200",states)
         self.assertIn("paymentSentOrAbort",states)
         
-        self.order.history = ["AbortPayment"]
+        self.order.events = ["AbortPayment"]
         states = self.evaluator.evaluate(self.order)
         self.assertIn("paymentSentOrAbort",states)
 

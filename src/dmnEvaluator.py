@@ -3,7 +3,7 @@ from dmnInputType import DMNInputType
 from dmnGraph import DMNGraph
 
 
-class DMNHistoryFunctions():
+class DMNEventsFunctions():
     def amount(self, log, event):
         return log.count(event)
 
@@ -50,7 +50,7 @@ class DMNEvaluator:
     """
     DMNEvaluator is a class that evaluates an object against the rules and states defined in a DMNTable.
 
-    The DMNEvaluator processes the object according to the rules specified in the DMNTable and returns a list of valid states for the object. It evaluates objects based on their attributes and history, utilizing the DMNTable for the evaluation process.
+    The DMNEvaluator processes the object according to the rules specified in the DMNTable and returns a list of valid states for the object. It evaluates objects based on their attributes and events, utilizing the DMNTable for the evaluation process.
     
     Args:
     dmn_tables (list of DMNTable): List of DMNTables that have a DMNTable for each class
@@ -74,7 +74,7 @@ class DMNEvaluator:
 
         self.debugging = debugging
         self.dmnTables = dmn_tables
-        self.functions_events = DMNHistoryFunctions()
+        self.functions_events = DMNEventsFunctions()
         self.functions_link = DMNLinkFunctions(self, objects)
 
         self.graph = DMNGraph(dmn_tables, debugging)
