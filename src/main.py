@@ -5,7 +5,9 @@ from ocel2Parser import OCEL
 # Define paths to data files
 orderDMNpath = '../data/O2C_orderStateDMN.dmn'
 invoiceDMNpath = '../data/O2C_invoiceStateDMN.dmn'
-ocelPath = '../data/O2C_ocel_final_presentation_v1.json'
+ocelPath = '../data/O2C_event_log.json'
+# Uncomment the line below to use the OCEL file with the DeliverOrder event
+# ocelPath = '../data/O2C_event_log_with_DeliverOrder.json'
 
 # Parse DMN tables
 parser = DMNParser()
@@ -20,8 +22,10 @@ objects = ocel.get_objects_with_events_and_foreign_key()
 
 # Initialize evaluator and test for cyclic state dependencies
 evaluator = DMNEvaluator(dmnTables, objects, debugging=True)
-evaluator.visualizeGraph()
 
-# Evaluate object
+# Method to display data object state dependencies
+#evaluator.visualizeGraph()
+
+# Evaluate the order object
 order = objects[0]
 validStates = evaluator.evaluate(order)
