@@ -30,7 +30,7 @@
       "name": "order",
       "attributes": [
         {
-          "name": "price",
+          "name": "total",
           "type": "integer"
         },
         {
@@ -132,7 +132,7 @@
           "time":"2024-09-18T10:54:42.000Z"
         },
         {
-          "name": "price",
+          "name": "total",
           "value": "100",
           "time":"2023-05-22T11:54:42.000Z"
         }
