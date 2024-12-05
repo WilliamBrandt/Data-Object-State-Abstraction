@@ -29,9 +29,10 @@ class OCELParser:
             print(f"JSON validation error: {e.message}")
             raise
 
-    def parse(self):
+    def parse(self, validate_json=True):
         self.load_json()
-        self.validate_json()
+        if validate_json:
+            self.validate_json()
         return self.json_data
 
 
@@ -81,9 +82,9 @@ class OCEL:
     def get_object_objects(self):
         return self.object_objects
 
-    def parse_and_store(self, file_path):
+    def parse_and_store(self, file_path, validate_json=True):
         parser = OCELParser(file_path)
-        json_data = parser.parse()
+        json_data = parser.parse(validate_json=validate_json)
 
         for event_type in json_data['eventTypes']:
             self.add_event_type(event_type['name'], event_type)

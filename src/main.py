@@ -17,7 +17,8 @@ dmnTables = [orderDMN[0], invoiceDMN[0]] # '[0]' is necessary because the parser
 
 # Extract objects from OCEL
 ocel = OCEL()
-ocel.parse_and_store(ocelPath)
+# sometimes the OCEL json validation fails nevertheless the json is correct, in this case set validate_json=False
+ocel.parse_and_store(ocelPath, validate_json=True)
 objects = ocel.get_objects_with_events_and_foreign_key()
 
 # Initialize evaluator and test for cyclic state dependencies
