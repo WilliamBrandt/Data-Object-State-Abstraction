@@ -35,19 +35,6 @@ class OCELParser:
         return self.json_data
 
 
-def check_null(param):
-    if param is None:
-        return None
-    elif param.lower() == "none":
-        return None
-    elif param.lower() == "null":
-        return None
-    elif not param:
-        return None
-    else:
-        return param
-
-
 class OCEL:
     def __init__(self):
         self.event_type = {}
@@ -118,7 +105,6 @@ class OCEL:
                     attributes.append(attribute)
             # ensure common null handling of attribute values
             for attribute in attributes:
-                attribute['value'] = check_null(attribute['value'])
                 new_attributes.append(attribute)
 
             obj['attributes'] = new_attributes
