@@ -48,7 +48,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_0xy0cyi">
-          <text>amount("SendInvoice") == 1</text>
+          <text>amount("Send invoice") == 1</text>
         </inputEntry>
         <inputEntry id="UnaryTests_0q5bw43">
           <text></text>

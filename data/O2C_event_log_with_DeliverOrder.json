@@ -1,27 +1,27 @@
 {
   "eventTypes": [
     {
-      "name": "SendInvoice",
+      "name": "Send invoice",
       "attributes": []
     },
     {
-      "name": "FulfillOrder",
+      "name": "Fulfill order",
       "attributes": []
     },
     {
-      "name": "ManufactureProducts",
+      "name": "Manufacture products",
       "attributes": []
     },
     {
-      "name": "DeliverOrder",
+      "name": "Deliver order",
       "attributes": []
     },
     {
-      "name": "ProcessPayment",
+      "name": "Process payment",
       "attributes": []
     },
     {
-      "name": "ArchiveOrder",
+      "name": "Archive order",
       "attributes": []
     }
   ],
@@ -78,7 +78,7 @@
   "events": [
     {
       "id": "e1",
-      "type": "SendInvoice",
+      "type": "Send invoice",
       "time": "2024-09-17T05:00:00Z",
       "attributes": [],
       "relationships": [
@@ -94,7 +94,7 @@
     },
     {
       "id": "e2",
-      "type": "ManufactureProducts",
+      "type": "Manufacture products",
       "time": "2024-09-18T09:00:00Z",
       "attributes": [],
       "relationships": [
@@ -110,7 +110,7 @@
     },
     {
       "id": "e3",
-      "type": "DeliverOrder",
+      "type": "Deliver order",
       "time": "2024-09-18T12:00:00Z",
       "attributes": [],
       "relationships": [

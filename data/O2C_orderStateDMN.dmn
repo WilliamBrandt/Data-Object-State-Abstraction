@@ -165,7 +165,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_00z1qv5">
-          <text>amount("DeliverOrder") == 1</text>
+          <text>amount("Deliver order") == 1</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1yv6erq">
           <text>sent</text>
@@ -188,7 +188,7 @@
           <text></text>
         </inputEntry>
         <inputEntry id="UnaryTests_0zawzu1">
-          <text>amount("ArchiveOrder") == 1</text>
+          <text>amount("Archive order") == 1</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0nno7sg">
           <text>archived</text>

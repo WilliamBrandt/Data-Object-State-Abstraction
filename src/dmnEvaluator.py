@@ -125,8 +125,43 @@ class DMNEvaluator:
         end = function.rfind(")")
         return function[:start], function[start + 1:end]
 
+
+    def _split_expression_into_tokens(self, expression):
+        # First, we parse the expression into tokens taking into account quoted strings.
+        # We'll consider both single and double quotes as possible delimiters.
+        tokens = []
+        current_token = []
+        in_quotes = False
+        quote_char = None
+
+        for char in expression:
+            if in_quotes:
+                # If we're inside quotes, we only exit if we encounter the same quote character
+                if char == quote_char:
+                    in_quotes = False
+                current_token.append(char)
+            else:
+                # If we're not inside quotes, we watch for the start of quotes
+                if char in ('"', "'"):
+                    in_quotes = True
+                    quote_char = char
+                    current_token.append(char)
+                elif char.isspace():
+                    # Outside quotes, space indicates a token boundary
+                    if current_token:
+                        tokens.append("".join(current_token))
+                        current_token = []
+                else:
+                    current_token.append(char)
+
+        # Add the last token if present
+        if current_token:
+            tokens.append("".join(current_token))
+        return tokens
+
+
     def smart_split(self, expression):
-        all_fragments = expression.split()
+        all_fragments = self._split_expression_into_tokens(expression)
         if (len(all_fragments) == 1):
             return all_fragments
 
@@ -136,7 +171,7 @@ class DMNEvaluator:
         functionLevel = 0
         for i, term in enumerate(all_fragments):
             if "(" in term:
-                start = i
+                function_start_index = i
                 functionLevel += 1
                 innerFunction = True
             if ")" in term:
@@ -144,7 +179,7 @@ class DMNEvaluator:
                 functionLevel -= 1
             if functionLevel == 0:
                 if innerFunction:
-                    fragments.append(" ".join(all_fragments[start:end + 1]))
+                    fragments.append(" ".join(all_fragments[function_start_index:end + 1]))
                     innerFunction = False
                 else:
                     fragments.append(term)

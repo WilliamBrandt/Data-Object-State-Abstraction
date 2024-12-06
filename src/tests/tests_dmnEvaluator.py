@@ -243,6 +243,18 @@ class TestDMNFunctions(unittest.TestCase):
         self.assertNotIn("amountNotBetween200and1000",states)
         self.assertIn("amountGreaterThan400orLessThan100",states)
         
+    def test_extractOperatorAndValue(self):
+
+        expression = self.evaluator.smart_split("not(150 == 100)")
+        self.assertEqual(expression, ["not(150 == 100)"])
+        expression = self.evaluator.smart_split("150 == 100")
+        self.assertEqual(expression, ["150", "==", "100"])
+        
+        expression = self.evaluator.smart_split("amount(\"Event Name\")")
+        self.assertEqual(expression, ["amount(\"Event Name\")"])
+        expression = self.evaluator.smart_split("\"Event Name\"")
+        self.assertEqual(expression, ["\"Event Name\""])
+        
 
 if __name__ == '__main__':    
     unittest.main()
