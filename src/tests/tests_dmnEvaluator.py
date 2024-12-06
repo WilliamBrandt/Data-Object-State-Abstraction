@@ -225,6 +225,8 @@ class TestDMNFunctions(unittest.TestCase):
         self.orderDMN.add_state("invoiceNotPresent")
         self.orderDMN.add_rule([None,"not(> 200 and < 1000)",None,None])
         self.orderDMN.add_state("amountNotBetween200and1000")
+        self.orderDMN.add_rule([None,"(> 400 or < 100)",None,None])
+        self.orderDMN.add_state("amountGreaterThan400orLessThan100")
         
         # test rules
         self.order.related_objects = {}
@@ -232,12 +234,14 @@ class TestDMNFunctions(unittest.TestCase):
         states = self.evaluator.evaluate(self.order)
         self.assertIn("invoiceNotPresent",states)
         self.assertIn("amountNotBetween200and1000",states)
+        self.assertNotIn("amountGreaterThan400orLessThan100",states)
         
         self.order.related_objects['invoice'] = [self.invoice.id]
         self.order.totalamount = 500
         states = self.evaluator.evaluate(self.order)
         self.assertNotIn("invoiceNotPresent",states)
         self.assertNotIn("amountNotBetween200and1000",states)
+        self.assertIn("amountGreaterThan400orLessThan100",states)
         
 
 if __name__ == '__main__':    

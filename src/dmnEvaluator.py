@@ -223,6 +223,9 @@ class DMNEvaluator:
         buildInFunctions = ["not"]
         if function in buildInFunctions:
             return function
+        # cases like (> 5) or (== 5)
+        if function == "":
+            return ""
 
         type = input.type.value
         return f"self.functions_{type}.{function}"
