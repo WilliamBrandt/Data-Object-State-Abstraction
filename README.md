@@ -11,11 +11,11 @@ This repository contains the prototypical implementation of the data object stat
 - [Execution Flow in main.py](#execution-flow-in-mainpy)
 - [Limitations and Syntactic Sugar](#limitations-and-syntactic-sugar)
 - [Example Output](#example-output)
-- [Extension of the Demo Case](#extension-of-the-demo-case)
+- [Extending the Demo Case](#extending-the-demo-case)
   - [1. Extending the DMN Table](#1-extending-the-dmn-table)
   - [2. Extending the Log, Object Classes, and Objects](#2-extending-the-log-object-classes-and-objects)
   - [3. Extending the Evaluation of Data Object States](#3-extending-the-evaluation-of-data-object-states)
-
+- [Using the order-management OCEL](#using-the-order-management-ocel)
 
 ## Getting Started
 
@@ -115,7 +115,7 @@ The system detects `Ord1` as being in the `valid`, `paid` and `ready` states.
 After appending an `deliverOrder` event linked to `Ord1` (by using the extended event log `O2C_event_log_with_DeliverOrder.json`) and reevaluating, the system places `Ord1`  in the `valid`, `paid`, and `sent` states.
 
 
-## Extension of the Demo Case
+## Extending the Demo Case
 
 Want to customize the demo case? Fantastic! There are three levels of extension available to you, ranging in complexity:
 
@@ -158,3 +158,7 @@ For guidance, refer to the existing unit tests in `test_dmnEvaluator.py`. These 
 
 
 Happy extending!
+
+## Using the order-management OCEL
+
+In order to apply the tool to the [order-management OCEL](https://doi.org/10.5281/zenodo.8337463) published on the official [OCEL standard website](https://www.ocel-standard.org/), download the .json file and place it into the `data/` directory. Afterward, follow the instructions in the comments of the `main.py` to uncomment the correct lines. The provided DMN table only defines a basic set of states for order objects that you can extend following the instructions above.

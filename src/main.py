@@ -25,8 +25,29 @@ objects = ocel.get_objects_with_events_and_foreign_key()
 evaluator = DMNEvaluator(dmnTables, objects, debugging=True)
 
 # Method to display data object state dependencies
-#evaluator.visualizeGraph()
+evaluator.visualizeGraph()
 
-# Evaluate the order object
+# Evaluate the first order object
 order = objects[0]
 validStates = evaluator.evaluate(order)
+
+
+# To work with the order-management OCEL officially provided on the OCEL 2.0 website, download the
+# order-management.json file from the following link: https://doi.org/10.5281/zenodo.8337463
+# and place it in the data directory. Then, uncomment the following lines and comment the previous ones.
+# orderDMNpath = '../data/order-management.dmn'
+# ocelPath = '../data/order-management.json'
+
+# parser = DMNParser()
+# orderDMN = parser.parse(orderDMNpath)
+# dmnTables = [orderDMN[0]] # '[0]' is necessary because the parser returns a list of DMNTables
+
+# ocel = OCEL()
+# ocel.parse_and_store(ocelPath, validate_json=False)
+# objects = ocel.get_objects_with_events_and_foreign_key()
+
+# evaluator = DMNEvaluator(dmnTables, objects, debugging=False)
+
+# for obj in objects:
+#   if obj.clazz == 'orders':
+#     evaluator.evaluate(obj)

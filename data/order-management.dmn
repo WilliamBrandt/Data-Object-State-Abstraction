@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions_17g2i2l" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <decision id="decision_0c62b6h" name="orders">
+    <decisionTable id="decisionTable_0fna2u8" hitPolicy="COLLECT">
+      <input id="input1" label="state" biodi:width="192">
+        <inputExpression id="inputExpression1" typeRef="Any">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0fwqhkb" label="attribute.price">
+        <inputExpression id="LiteralExpression_0f2vpk4" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0p8giz7" label="link.items">
+        <inputExpression id="LiteralExpression_0trrhnl" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0xxvp2s" label="events">
+        <inputExpression id="LiteralExpression_139g0i3" typeRef="Any">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="output1" label="state" name="" typeRef="string" biodi:width="192" />
+      <rule id="DecisionRule_0ivf4mz">
+        <inputEntry id="UnaryTests_0vcxg6t">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0uzz1zl">
+          <text>&gt; 0</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_12d5oaf">
+          <text>amount() &gt;= 1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0doiylk">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_07isf3n">
+          <text>valid</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0opoz05">
+        <inputEntry id="UnaryTests_11thz03">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0l19q9s">
+          <text>&gt; 4000</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0eswnl4">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ktlea3">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0stvpog">
+          <text>high_value</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_18x0jha">
+        <inputEntry id="UnaryTests_1bt6yg1">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_10dgr06">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1vq2yyh">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0g4o7pu">
+          <text>amount("place order") == 1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ardbxl">
+          <text>placed</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_12pjwas">
+        <inputEntry id="UnaryTests_0a5r1al">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_077wfhu">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_04398ul">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1psacvq">
+          <text>amount("confirm order") == 1</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0zm85oe">
+          <text>confirmed</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_1sa0043">
+      <dmndi:DMNShape id="DMNShape_0bbi2hj" dmnElementRef="decision_0c62b6h">
+        <dc:Bounds height="80" width="180" x="150" y="150" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
