@@ -326,6 +326,5 @@ class DMNEvaluator:
                         validStates.append(state)
         else:
             validStates = possibleStates
-        if (self.debugging):
-            print(f"\n{debugging_prefix}Object: {object.id} from class: {object.clazz} has states:{validStates}")
+        print(f"\n{debugging_prefix}Object: {object.id} from class: {object.clazz} has states:{validStates}")
         return validStates
