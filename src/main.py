@@ -48,6 +48,20 @@ validStates = evaluator.evaluate(order)
 
 # evaluator = DMNEvaluator(dmnTables, objects, debugging=False)
 
+# numOrders = 0
+# stateOccurrences = {}
+
 # for obj in objects:
 #   if obj.clazz == 'orders':
-#     evaluator.evaluate(obj)
+#     numOrders += 1
+#     states = evaluator.evaluate(obj)
+#     tuples = tuple(states)
+    
+#     # Count the number of occurrences of each state combination
+#     if tuples in stateOccurrences:
+#         stateOccurrences[tuples] += 1
+#     else:
+#         stateOccurrences[tuples] = 1
+    
+# print("From the " + str(numOrders) + " orders. The following state combinations occured:")
+# print(stateOccurrences)
