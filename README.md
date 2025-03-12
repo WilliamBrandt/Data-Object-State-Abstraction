@@ -127,8 +127,8 @@ You can add or modify states using the online editor at [demo.bpmn.io/dmn](https
 - Use the semantics from the provided examples as a guide, which cover many possible scenarios.
 
 #### Column Naming Conventions:
-- **Attributes**: `attribute.[attribute name]`
-- **Links**: `link.[object class]`
+- **Attributes**: `<<attribute>> [attribute name]`
+- **Links**: `<<link>> [object class]`
 - **Events**: `events`
 - **Nested States**: Use the column `state` to construct nested state definitions.
 

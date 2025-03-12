@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions_1e2stvb" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="17.0.0">
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions_1e2stvb" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="17.0.2">
   <decision id="decision_0a93vpn" name="invoice">
     <decisionTable id="decisionTable_0m3vbq4" hitPolicy="COLLECT">
       <input id="InputClause_13pby60" label="state" biodi:width="192">
@@ -7,18 +7,18 @@
           <text></text>
         </inputExpression>
       </input>
-      <input id="input1" label="attribute.id">
+      <input id="input1" label="&#60;&#60;attribute&#62;&#62; id">
         <inputExpression id="inputExpression1" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_17pgjn5" label="&#60;&#60;link&#62;&#62; payment">
+        <inputExpression id="LiteralExpression_1gjcwmi" typeRef="Any">
           <text></text>
         </inputExpression>
       </input>
       <input id="InputClause_0mirflu" label="events" biodi:width="192">
         <inputExpression id="LiteralExpression_156885m" typeRef="Any">
-          <text></text>
-        </inputExpression>
-      </input>
-      <input id="InputClause_17pgjn5" label="link.payment">
-        <inputExpression id="LiteralExpression_1gjcwmi" typeRef="Any">
           <text></text>
         </inputExpression>
       </input>
@@ -30,10 +30,10 @@
         <inputEntry id="UnaryTests_1hxh4d6">
           <text>!= None</text>
         </inputEntry>
-        <inputEntry id="UnaryTests_0ciucg2">
+        <inputEntry id="UnaryTests_0s6i5q4">
           <text></text>
         </inputEntry>
-        <inputEntry id="UnaryTests_0s6i5q4">
+        <inputEntry id="UnaryTests_0ciucg2">
           <text></text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0qk4ngz">
@@ -47,11 +47,11 @@
         <inputEntry id="UnaryTests_1v8y9zb">
           <text></text>
         </inputEntry>
-        <inputEntry id="UnaryTests_0xy0cyi">
-          <text>amount("Send invoice") == 1</text>
-        </inputEntry>
         <inputEntry id="UnaryTests_0q5bw43">
           <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0xy0cyi">
+          <text>amount("Send invoice") == 1</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0er279m">
           <text>sent</text>
@@ -64,11 +64,11 @@
         <inputEntry id="UnaryTests_0dkcixe">
           <text></text>
         </inputEntry>
-        <inputEntry id="UnaryTests_0r4jz3s">
-          <text></text>
-        </inputEntry>
         <inputEntry id="UnaryTests_0vb9gsx">
           <text>amount() == 1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0r4jz3s">
+          <text></text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0n52a32">
           <text>paid</text>

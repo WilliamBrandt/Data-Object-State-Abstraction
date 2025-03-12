@@ -7,22 +7,22 @@
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_0wjzh6r" label="attribute.id">
+      <input id="InputClause_0wjzh6r" label="&#60;&#60;attribute&#62;&#62; id">
         <inputExpression id="LiteralExpression_07u5gw0" typeRef="string">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_0fwqhkb" label="attribute.total">
+      <input id="InputClause_0fwqhkb" label="&#60;&#60;attribute&#62;&#62; total">
         <inputExpression id="LiteralExpression_0f2vpk4" typeRef="string">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1j21pul" label="link.invoice">
+      <input id="InputClause_1j21pul" label="&#60;&#60;link&#62;&#62; invoice">
         <inputExpression id="LiteralExpression_1rtcvv9" typeRef="Any">
           <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_1i2ge2o" label="link.product">
+      <input id="InputClause_1i2ge2o" label="&#60;&#60;link&#62;&#62; item">
         <inputExpression id="LiteralExpression_0f5u1ln" typeRef="Any">
           <text></text>
         </inputExpression>

@@ -15,17 +15,35 @@ class DMNParser:
         self.output_entry_string = './/dmn:outputEntry/dmn:text'
         
     def _examineInputType(self, input):
-        if input == DMNInputType.state.value:
-            return DMNInputType.state, input
-        elif input.startswith(DMNInputType.attribute.value + "."):
-            return DMNInputType.attribute, input.replace(DMNInputType.attribute.value + ".", "")
-        elif input.startswith(DMNInputType.link.value):
-            return DMNInputType.link, input.replace(DMNInputType.link.value + ".", "")
-        elif input == DMNInputType.events.value:
-            return DMNInputType.events, input
+        stereotype, core = self._extractStereotype(input)
+        if stereotype == DMNInputType.state.value:
+            return DMNInputType.state, core
+        elif stereotype == DMNInputType.events.value:
+            return DMNInputType.events, core
+        elif stereotype == DMNInputType.attribute.value:
+            return DMNInputType.attribute, core
+        elif stereotype == DMNInputType.link.value:
+            return DMNInputType.link, core
         else:
             raise ValueError(f"Field not recognized. Field: {input}")
     
+    # this function extracts the stereotype from the input
+    # A stereotype is enclosed by brackets: <<stereotype>>
+    def _extractStereotype(self, input):
+        opening_bracket = input.find("<<")
+        
+        if opening_bracket == -1:
+            return input, input
+
+        closing_bracket = input.find(">>")
+
+        if closing_bracket == -1:
+            return None, None
+        
+        stereotype = input[opening_bracket + 2 : closing_bracket]
+        core = input[closing_bracket + 3:]
+        return stereotype, core
+        
 
     def parse(self, file_path):
         with open(file_path, 'r') as file:
