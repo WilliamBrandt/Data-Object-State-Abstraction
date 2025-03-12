@@ -9,7 +9,7 @@
       "attributes": []
     },
     {
-      "name": "Manufacture products",
+      "name": "Manufacture items",
       "attributes": []
     },
     {
@@ -49,7 +49,7 @@
       ]
     },
     {
-      "name": "product",
+      "name": "item",
       "attributes": [
         {
           "name": "name",
@@ -94,17 +94,17 @@
     },
     {
       "id": "e2",
-      "type": "Manufacture products",
+      "type": "Manufacture items",
       "time": "2024-09-18T09:00:00Z",
       "attributes": [],
       "relationships": [
         {
           "objectId": "Ord1",
-          "qualifier": "Manufacture Product of Order"
+          "qualifier": "Manufacture Item of Order"
         },
         {
-          "objectId": "Pro1",
-          "qualifier": "Product to Manufacture"
+          "objectId": "Item1",
+          "qualifier": "Item to Manufacture"
         }
       ]
     }
@@ -144,12 +144,12 @@
       ]
     },
     {
-      "id": "Pro1",
-      "type": "product",
+      "id": "Item1",
+      "type": "item",
       "attributes": [
         {
           "name": "name",
-          "value": "Product A",
+          "value": "Item A",
           "time":"2023-05-22T11:54:42.000Z"
         },
         {
@@ -161,17 +161,17 @@
       "relationships": [
         {
           "objectId": "Ord1",
-          "qualifier": "product from order"
+          "qualifier": "item from order"
         }
       ]
     },
     {
-      "id": "Pro2",
-      "type": "product",
+      "id": "Item2",
+      "type": "item",
       "attributes": [
         {
           "name": "name",
-          "value": "Product B",
+          "value": "Item B",
           "time":"2023-05-22T11:54:42.000Z"
         },
         {
@@ -183,7 +183,7 @@
       "relationships": [
         {
           "objectId": "Ord1",
-          "qualifier": "product from order"
+          "qualifier": "item from order"
         }
       ]
     },
